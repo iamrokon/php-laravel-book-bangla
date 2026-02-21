@@ -1,0 +1,48 @@
+:root {
+  --vp-c-brand-1: #4f46e5;
+  --vp-c-brand-2: #4338ca;
+  --vp-c-brand-3: #3730a3;
+  --vp-home-hero-name-color: transparent;
+  --vp-home-hero-name-background: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+}
+
+.VPNav {
+  backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.7) !important;
+}
+
+.dark .VPNav {
+  background: rgba(28, 28, 28, 0.7) !important;
+}
+
+.VPHero .name {
+  background: var(--vp-home-hero-name-background);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+.VPCard {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(128, 128, 128, 0.1) !important;
+  background: rgba(255, 255, 255, 0.05) !important;
+  backdrop-filter: blur(4px);
+}
+
+.VPCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  border-color: var(--vp-c-brand-1) !important;
+}
+
+/* Custom fonts for Bengali text readability */
+body {
+  font-family: 'Inter', 'SolaimanLipi', Arial, sans-serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+code {
+  font-family: 'Fira Code', monospace;
+}
