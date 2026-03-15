@@ -35,6 +35,32 @@ export default {
                     { text: 'Episode 2: Composer Intro', link: '/module-2/composer-intro' },
                     { text: 'Episode 3 & 4: Composer Autoloading', link: '/module-2/composer-autoloading' },
                     { text: 'Episode 5: Managing Dependencies', link: '/module-2/managing-dependencies' },
+                    { text: 'Episode 6: Packagist & Packages', link: '/module-2/packagist' },
+                    { text: 'Episode 7: Advanced Dependency Management', link: '/module-2/advanced-dependency' },
+                ]
+            },
+            {
+                text: 'মডিউল ৩: ওয়েব প্রাইমার ও ওওপি (OOP)',
+                collapsed: true,
+                items: [
+                    { text: 'Episode 1-5: Web Primer', link: '/module-3/web-primer' },
+                    { text: 'Live Class: Nginx & Web Server', link: '/module-3/nginx-web-server' },
+                    { text: 'Live Class: Form Handling', link: '/module-3/form-handling' },
+                    { text: 'Live Class: OOP Basics', link: '/module-3/oop-basics' },
+                ]
+            },
+            {
+                text: 'মডিউল ৪: অ্যাডভান্সড ওওপি ও ডাটাবেজ',
+                collapsed: true,
+                items: [
+                    { text: 'Programming Paradigms', link: '/module-4/programming-paradigms' },
+                    { text: 'OOP Deep Dive', link: '/module-4/oop-deep-dive' },
+                    { text: 'Namespaces', link: '/module-4/namespaces' },
+                    { text: 'OOP Design Principles', link: '/module-4/oop-principles' },
+                    { text: 'Dependency Injection & Composition', link: '/module-4/dependency-injection' },
+                    { text: 'SOLID Principles', link: '/module-4/solid-principles' },
+                    { text: 'Constants & Enums', link: '/module-4/constants-enums' },
+                    { text: 'Database Design & Architecture', link: '/module-4/database-design' },
                 ]
             },
             {
