@@ -20,7 +20,7 @@ var_dump((bool)$str); // bool(true)
 $str1 = "0";
 var_dump((bool)$str1); // bool(false)
 ```
-ইন্টিজার `0`, `0.0`, `-0.0`, `" "`, `[]`, `null` এদেরকে টাইপ কাস্ট করে boolean এ কনভার্ট করলে `bool(false)` রিটার্ন করবে।
+ইন্টিজার `0`, `0.0`, `-0.0`, `""`, `[]`, `null` এদেরকে টাইপ কাস্ট করে boolean এ কনভার্ট করলে `bool(false)` রিটার্ন করবে।
 
 ### Integer Casting
 ```php
