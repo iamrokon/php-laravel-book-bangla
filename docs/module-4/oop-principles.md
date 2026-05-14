@@ -2,148 +2,174 @@
 
 প্রোগ্রামিংয়ে **Principle** বা মূলনীতি হলো গাইডলাইন, আর **Design Pattern** হলো কোনো নির্দিষ্ট সমস্যার প্রমাণিত সমাধান (Specific problem solution)। ভালো মানের ডিজাইন করতে গেলে কিছু বেসিক প্রিন্সিপাল মাথায় রাখতে হয়।
 
-## 1. Encapsulate what varies
+## 1. Encapsulate what varies (পরিবর্তনশীল অংশকে আলাদা করা)
+
 Identify the aspects of your application that vary and separate them from what stays the same.
 
-একটি ক্লাসের কিছু অংশ নতুন রিকয়ারমেন্ট আসার সাথে সাথে পরিবর্তিত হতে পারে, আবার কিছু অংশ ফিক্সড থাকে। যে অংশটি পরিবর্তিত হতে পারে, তাকে একই জায়গায় না রেখে আলাদাভাবে এনক্যাপসুলেট করতে হয়। 
+একটি ক্লাসের কিছু অংশ নতুন রিকয়ারমেন্ট আসার সাথে সাথে পরিবর্তিত হতে পারে, আবার কিছু অংশ ফিক্সড থাকে। যে অংশটুকু পরিবর্তন হবে সেটিকে আমরা fixed অংশের সাথে একসাথে রাখা যাবে না।
+
+ধরা যাক, আমাদের একটি `Invoice` ক্লাস আছে যেখানে অর্ডার টোটাল ক্যালকুলেট করা হয়। এখানে ভ্যাট বা ট্যাক্স ক্যালকুলেশন একেক দেশের জন্য একেক রকম হতে পারে।
 
 **Bad Practice:**
+এখানে ট্যাক্স ক্যালকুলেশন লজিকটি সরাসরি `getOrderTotal` মেথডের ভেতর আছে। নতুন কোনো দেশের ট্যাক্স রুল আসলে এই মেথডটি বারবার পরিবর্তন করতে হবে।
 ```php
-function getOrderTotal($order) {
-    $total = 0;
-    foreach ($order->items as $item) {
-        $total += ($item->price * $item->quantity);
-    }
-
-    // Tax calculation logic (Can vary)
-    if ($order->country === 'US') {
-        $total += ($total * 0.07);
-    } elseif ($order->country === 'EU') {
-        $total += ($total * 0.20);
-    }
-    return $total;
-}
-```
-
-**Good Practice:**
-পরিবর্তনশীল ট্যাক্স ক্যালকুলেশনকে আলাদা ক্লাস বা মেথডে ভাগ করে ফেলা:
-```php
-class TaxCalculator {
-    public function getTaxRate($country, $state) {
-        if ($country === 'US') {
-            return $this->getUsTaxRate($state);
-        } elseif ($country === 'EU') {
-            return $this->getEuTaxRate($country);
-        }
-        return 0;
-    }
-    
-    // ... private sub-methods for USA, EU
-}
-
-class Order {
-    protected TaxCalculator $taxCalculator;
-    
-    public function getOrderTotal($order) {
+class Invoice
+{
+    public function getOrderTotal($order, array $items): float
+    {
         $total = 0;
-        foreach ($order->items as $item) {
+        foreach ($items as $item) {
             $total += ($item->price * $item->quantity);
         }
-        // Encapsulated tax calculation
-        $total += ($total * $this->taxCalculator->getTaxRate($order->country, $order->state));
+
+        // এই অংশটুকু প্রতিনিয়ত পরিবর্তন হতে পারে (Varies)
+        if ($order->country === 'US') {
+            $total += ($total * 0.07);
+        } else if ($order->country === 'EU') {
+            $total += ($total * 0.20);
+        }
+
         return $total;
     }
 }
 ```
 
+**Good Practice:**
+পরিবর্তনশীল ট্যাক্স ক্যালকুলেশনকে আলাদা মেথড বা ক্লাসে ভাগ করে ফেলা। ফলে ট্যাক্স রিলেটেড কোনো চেঞ্জ আসলে শুধু ঐ নির্দিষ্ট অংশেই পরিবর্তন করলেই হবে।
+```php
+class Invoice
+{
+    public function getTaxRate($country): float
+    {
+        if ($country == 'US') {
+            return 0.07;
+        } else if ($country == 'EU') {
+            return 0.20;
+        }
+        return 0;
+    }
+
+    public function getOrderTotal($order, array $items): float
+    {
+        $total = 0;
+        foreach ($items as $item) {
+            $total += ($item->price * $item->quantity);
+        }
+
+        // ট্যাক্স ক্যালকুলেশন এখন আলাদা মেথডে এনক্যাপসুলেটেড
+        $total += ($total * $this->getTaxRate($order->country));
+
+        return $total;
+    }
+}
+```
+ট্যাক্স রিলেটেড ক্যালকুলেশন আরও জটিল হলে আমরা আলাদা ক্লাস বানিয়ে ফেলতে পারি।
+
 ## 2. Composition over Inheritance
-অপ্রয়োজনীয় ইনহেরিটেন্স (Inheritance) ব্যবহার না করে একটি ক্লাসের অবজেক্টকে অন্য ক্লাসে ইনজেক্ট করে কাজ করাকে "ফেভার কম্পোজিশন ওভার ইনহেরিটেন্স" বা **Composition** বলা হয়। 
+অপ্রয়োজনীয় ইনহেরিটেন্স (Inheritance) ব্যবহার না করে একটি ক্লাসের অবজেক্টকে অন্য ক্লাসে ইনজেক্ট করে কাজ করাকে "ফেভার কম্পোজিশন ওভার ইনহেরিটেন্স" বা **Composition** বলা হয়। এটি **has-a** রিলেশনশিপ মেইনটেইন করে।
 
-**Dependency Injection:** কোনো ক্লাসের ভেতরে আরেকটা ক্লাসের অবজেক্ট `new` কি-ওয়ার্ড দিয়ে সরাসরি তৈরি না করে, কনস্ট্রাক্টরের (Constructor) মাধ্যমে বাইরে থেকে পাস করে দেওয়াটাই হলো ডিপেন্ডেন্সি ইনজেকশন। এটি ডাইরেক্ট হার্ড-কোডিং কমায় এবং loose coupling নিশ্চিত করে। লারাভেলে একে স্বয়ংক্রিয় করার জন্য Service Container বা IoC Container ব্যবহৃত হয় (যেমন: `$car = app()->make(Car::class);`)।
-
-**Inheritance Example (Tightly Coupled):**
+**Composition & Dependency Injection (Loosely Coupled):**
 ```php
 class Engine {
     public function startEngine() { /* ... */ }
 }
-class Car extends Engine {
-    // Inheritance usage
-}
-```
 
-**Composition & Dependency Injection (Loosely Coupled):**
-```php
 class Vehicle {
-    public Engine $engine;
+    protected Engine $engine;
     
     public function __construct(Engine $engine) {
         $this->engine = $engine;
     }
     
     public function start() {
-        $this->engine->startEngine(); // Composition
+        $this->engine->startEngine(); // Composition (Vehicle has an Engine)
     }
 }
-// Usage: Outside instantiation
+
 $car = new Vehicle(new Engine());
 $car->start();
 ```
 
-## 3. Program to an interface, not an implementation (Depend on Abstraction)
-ধরা যাক আমরা ফাইলে বা ডেটাবেজে কোনো কিছু সেভ করতে চাই বা নোটিফিকেশন পাঠাতে চাই। যদি সরাসরি `MySQLDatabase` বা `EmailNotifier` ক্লাসের উপর নির্ভর করে আমাদের সিস্টেম বানাই, তবে পরে অন্য কোনো ডেটাবেজ বা SMS নোটিফিকেশন যুক্ত করা কষ্টকর হয়ে যাবে।
-তাই নির্দিষ্ট কোনো **Concrete Class**-এর উপর ডিপেন্ড না করে, একটি **Interface** বা Abstraction-এর উপর ডিপেন্ড করতে হবে।
+## 3. Program to an interface, not an implementation (ইন্টারফেসের ওপর নির্ভর করা)
+
+সরাসরি কোনো concrete অবজেক্টের ওপর ডিপেন্ড না করে আমরা একটা ক্লাসের Interface বা Abstract ক্লাসের ওপর ডিপেন্ড করব। একেই বলে **Program to an interface, not an implementation**।
+
+ধরা যাক, আমাদের একটি `Driver` ক্লাস আছে যা কোনো যানবাহন চালায়।
 
 **Bad Practice:**
+এখানে `Driver` সরাসরি `Bike` ক্লাসের ওপর নির্ভরশীল। যদি ড্রাইভারকে `Car` চালাতে হয়, তবে আমাদের `Driver` ক্লাস পরিবর্তন করতে হবে। কারণ আমরা এখানে ডিপেন্ডেন্সি হিসেবে `Bike` কে ফিক্সড (Hardcoded) করে দিয়েছি।
 ```php
-class MySQLDatabase {
-    public function connect() { /* ... */ }
-    public function query($sql) { /* ... */ }
+class Bike {
+    public function start() {
+        printf("Bike started");
+    }
 }
 
-class UserRepository {
-    private $database;
-    public function __construct() {
-        $this->database = new MySQLDatabase(); // Tightly coupled
+class Driver {
+    protected $bike;
+    public function __construct(Bike $bike) {
+        $this->bike = $bike;
+    }
+    public function startRide() {
+        $this->bike->start();
     }
 }
 ```
 
-**Good Practice (Interface):**
+**Good Practice:**
+এই সমস্যা সমাধানের জন্য আমরা একটি `VehicleInterface` তৈরি করতে পারি। `Bike` এবং `Car` উভয়ই এই ইন্টারফেসটি ইমপ্লিমেন্ট করবে। ফলে `Driver` এখন যেকোনো `Vehicle` চালানোর সক্ষমতা অর্জন করবে।
+
 ```php
-interface DatabaseInterface {
-    public function connect();
-    public function query($sql);
+interface VehicleInterface {
+    public function start();
 }
 
-class MySQLDatabase implements DatabaseInterface {
-    public function connect() {}
-    public function query($sql) {}
-}
-
-class PostgreSQLDatabase implements DatabaseInterface {
-    public function connect() {}
-    public function query($sql) {}
-}
-
-class UserRepository {
-    private $database;
-
-    // Depend on Interface, not concrete class
-    public function __construct(DatabaseInterface $database) {
-        $this->database = $database;
-    }
-
-    public function getUser($id) {
-        return $this->database->query("SELECT * FROM users WHERE id = $id");
+class Bike implements VehicleInterface {
+    public function start() {
+        printf("Bike started ");
     }
 }
 
-// Usage
-$mysqlDb = new MySQLDatabase();
-$userRepo = new UserRepository($mysqlDb);
+class Car implements VehicleInterface {
+    public function start() {
+        printf("Car started ");
+    }
+}
 
-// Switching to PostgreSQL is very easy now
-$postgresDb = new PostgreSQLDatabase();
-$userRepo = new UserRepository($postgresDb);
+class Driver {
+    protected VehicleInterface $vehicle;
+
+    public function __construct(VehicleInterface $vehicle) {
+        $this->vehicle = $vehicle;
+    }
+
+    public function startRide() {
+        $this->vehicle->start();
+    }
+}
+
+// ব্যবহারের সময়:
+$bike = new Bike();
+$driver = new Driver($bike);
+$driver->startRide();
+
+$car = new Car();
+$driver = new Driver($car); // এখন কার দিয়েও চালানো যাবে
+$driver->startRide();
 ```
-লারাভেলের বিভিন্ন মাল্টিপল অপশন (Database, Queue, Cache, Notification) এভাবেই ইন্টারফেসের উপর নির্ভরশীল হয়ে কাজ করে।
+ইন্টারফেস ব্যবহারের ফলে আমরা সহজেই নতুন কোনো Vehicle নিয়ে আসতে পারব (যেমন: Boat), যার জন্য মূল `Driver` ক্লাসে কোনো পরিবর্তন করতে হবে না।
+
+```php
+class Boat implements VehicleInterface {
+    public function start() {
+        printf("Boat started");
+    }
+}
+
+$boat = new Boat();
+$driver = new Driver($boat);
+$driver->startRide();
+```
+
+**কখন ইন্টারফেস ব্যবহার করবেন?**
+যদি একটি ক্লাসের ডিপেন্ডেন্সি হিসেবে ভিন্ন ভিন্ন ফ্যাসিলিটি দিতে হয়, তবে আমরা Interface এর ওপর ডিপেন্ড করব। কিন্তু আমরা যদি নিশ্চিত হই যে, সেই ক্লাসে ঐ নির্দিষ্ট টাইপের অবজেক্ট ছাড়া অন্য কোনো অবজেক্ট ডিপেন্ডেন্সি হিসেবে আসবে না, সেক্ষেত্রে ইন্টারফেস ব্যবহার না করলেও চলবে।
