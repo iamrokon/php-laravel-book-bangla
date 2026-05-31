@@ -81,14 +81,8 @@ export default {
                             items: [
                                 { text: 'Clean Code Practice', link: '/module-6/clean-code' },
                                 { text: 'Software Design Patterns', link: '/module-6/design-patterns' },
-                            ]
-                        },
-                        {
-                            text: 'মডিউল ৮: লারাভেল ফ্রেমওয়ার্ক',
-                            collapsed: true,
-                            items: [
-                                { text: 'Intro to Laravel', link: '/module-8/laravel-intro' },
-                                { text: 'Request-Response Lifecycle', link: '/module-8/request-lifecycle' },
+                                { text: 'Intro to Frameworks', link: '/module-6/frameworks-intro' },
+                                { text: 'MVC Architecture', link: '/module-6/mvc-architecture' },
                             ]
                         },
                         {
@@ -107,11 +101,16 @@ export default {
             // Laravel Sidebar
             '/laravel/': [
                 {
-                    text: 'Laravel Fundamentals',
+                    text: 'মডিউল ৮: লারাভেল ফ্রেমওয়ার্ক',
                     items: [
                         { text: 'Laravel Introduction', link: '/laravel/introduction' },
-                        { text: 'Installation', link: '/laravel/installation' },
+                        { text: 'Installation & Sail', link: '/laravel/installation' },
                         { text: 'Directory Structure', link: '/laravel/directory-structure' },
+                        { text: 'Routing Basics', link: '/laravel/routing' },
+                        { text: 'Controllers', link: '/laravel/controllers' },
+                        { text: 'Views & Blade', link: '/laravel/views' },
+                        { text: 'Database Migrations', link: '/laravel/migrations' },
+                        { text: 'Request Lifecycle & Kernel', link: '/laravel/request-lifecycle' },
                     ]
                 }
             ],
