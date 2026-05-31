@@ -1,5 +1,5 @@
 export default {
-    title: "প্রোকোডার বুক",
+    title: "Learn With Rokon",
     description: "একটি কমপ্লিট প্রোগ্রামিং বুক | সহজ ভাষায় ওয়েব ডেভেলপমেন্ট ও প্রোগ্রামিং শিখুন ।",
     themeConfig: {
         nav: [

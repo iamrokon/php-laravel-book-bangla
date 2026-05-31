@@ -2,12 +2,12 @@
 layout: home
 
 hero:
-  name: "প্রোকোডার বুক"
+  name: "Learn With Rokon"
   text: "মাস্টার করুন ওয়েব ডেভেলপমেন্ট ও প্রোগ্রামিং"
   tagline: "সহজ ভাষায়, পিএইচপি, লারাভেল, সিএসএস, পাইথন ও আরও অনেক কিছু"
   image:
     src: https://www.php.net/images/logos/new-php-logo.svg
-    alt: Procoder Logo
+    alt: Learn With Rokon
   actions:
     - theme: brand
       text: PHP শেখা শুরু করুন
