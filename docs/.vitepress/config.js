@@ -102,6 +102,7 @@ export default {
             '/laravel/': [
                 {
                     text: 'মডিউল ৮: লারাভেল ফ্রেমওয়ার্ক',
+                    collapsed: false,
                     items: [
                         { text: 'Laravel Introduction', link: '/laravel/introduction' },
                         { text: 'Installation & Sail', link: '/laravel/installation' },
@@ -111,6 +112,29 @@ export default {
                         { text: 'Views & Blade', link: '/laravel/views' },
                         { text: 'Database Migrations', link: '/laravel/migrations' },
                         { text: 'Request Lifecycle & Kernel', link: '/laravel/request-lifecycle' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ৯: ডেটাবেজ ও কুয়েরি বিল্ডার',
+                    collapsed: true,
+                    items: [
+                        { text: 'Database Seeding & Multi-DB', link: '/laravel/seeding-and-multi-db' },
+                        { text: 'Database Query Builder', link: '/laravel/query-builder' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ৯(২): অ্যাডভান্সড ব্লেড ও সেশন',
+                    collapsed: true,
+                    items: [
+                        { text: 'Advanced Blade Views', link: '/laravel/advanced-views' },
+                        { text: 'Sessions in Laravel', link: '/laravel/sessions' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১০ ও ১১: অথেন্টিকেশন ও মিডলওয়্যার',
+                    collapsed: true,
+                    items: [
+                        { text: 'Authentication Mechanisms', link: '/laravel/authentication' },
                     ]
                 }
             ],
