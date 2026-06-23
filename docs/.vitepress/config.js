@@ -233,6 +233,8 @@ export default {
                         { text: '৭. স্টেট লিফটিং', link: '/react/lifting-state-up' },
                         { text: '৮. কম্পোজিশন বনাম ইনহেরিটেন্স', link: '/react/composition-inheritance' },
                         { text: '৯. হায়ার অর্ডার কম্পোনেন্ট (HOC)', link: '/react/higher-order-components' },
+                        { text: '১০. রিঅ্যাক্ট কনটেক্সট এপিআই (Context API)', link: '/react/context-api' },
+                        { text: '১১. রিঅ্যাক্ট হুকস (React Hooks)', link: '/react/react-hooks' },
                     ]
                 }
             ]
