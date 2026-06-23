@@ -8,6 +8,7 @@ export default {
             { text: "Laravel", link: "/laravel/introduction" },
             { text: "CSS", link: "/css/introduction" },
             { text: "JavaScript", link: "/coming-soon" },
+            { text: "React", link: "/react/introduction" },
             { text: "Python", link: "/coming-soon" },
             { text: "Node.js", link: "/coming-soon" },
         ],
@@ -213,6 +214,25 @@ export default {
                     items: [
                         { text: 'Prothom Alo Clone', link: '/css/project-prothom-alo' },
                         { text: 'Facebook Login Clone', link: '/css/project-facebook' },
+                    ]
+                }
+            ],
+
+            // React Sidebar
+            '/react/': [
+                {
+                    text: 'রিঅ্যাক্ট মৌলিক (React Basics)',
+                    collapsed: false,
+                    items: [
+                        { text: '১. রিঅ্যাক্ট কী ও কীভাবে কাজ করে?', link: '/react/introduction' },
+                        { text: '২. ভার্চুয়াল ডম ব্যাখ্যা', link: '/react/virtual-dom' },
+                        { text: '৩. ইনস্টলেশন ও সেটআপ', link: '/react/installation' },
+                        { text: '৪. JSX ও এলিমেন্ট রেন্ডারিং', link: '/react/jsx-rendering' },
+                        { text: '৫. কম্পোনেন্ট ও প্রপস', link: '/react/components-props' },
+                        { text: '৬. ফর্ম হ্যান্ডলিং', link: '/react/forms' },
+                        { text: '৭. স্টেট লিফটিং', link: '/react/lifting-state-up' },
+                        { text: '৮. কম্পোজিশন বনাম ইনহেরিটেন্স', link: '/react/composition-inheritance' },
+                        { text: '৯. হায়ার অর্ডার কম্পোনেন্ট (HOC)', link: '/react/higher-order-components' },
                     ]
                 }
             ]

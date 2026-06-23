@@ -100,3 +100,112 @@ return new class extends Migration
   ```bash
   php artisan migrate:status
   ```
+
+---
+
+## ৫. SQLite ডাটাবেজ সেটআপ ও ব্যবহার (SQLite Database Setup)
+
+লোকাল ডেভেলপমেন্ট বা ছোট প্রজেক্টের জন্য MySQL সার্ভার সেটআপ করার ঝামেলা এড়াতে আমরা অত্যন্ত হালকা এবং সার্ভারলেস **SQLite** ডাটাবেজ ব্যবহার করতে পারি।
+
+### ক. SQLite ফাইল তৈরি করা:
+প্রজেক্টের রুট ডিরেক্টরি থেকে `database` ফোল্ডারের ভেতরে **`database.sqlite`** নামে একটি ফাঁকা ফাইল তৈরি করে নিন:
+```
+database/database.sqlite
+```
+
+### খ. `.env` ফাইল কনফিগার করা:
+SQLite ডাটাবেজ ব্যবহার করার জন্য আমাদের `DB_HOST`, `DB_PORT`, `DB_DATABASE`, `DB_USERNAME`, `DB_PASSWORD` এই ক্রেডেনশিয়ালগুলোর কোনো প্রয়োজন নেই। শুধু নিচের মতো করে সংযোগ বা কানেকশন টাইপ সেট করে দিলেই হবে:
+```ini
+DB_CONNECTION=sqlite
+```
+*(লারাভেল স্বয়ংক্রিয়ভাবে `database/database.sqlite` ফাইলটিকে ডাটাবেজ হিসেবে রিড করে নেবে।)*
+
+### গ. ভিজ্যুয়াল ট্র্যাকিং:
+ভিএস কোডে ডাটাবেজের টেবিলগুলো সরাসরি দেখার জন্য **SQLite** অথবা **SQLite Viewer** এক্সটেনশনটি ইনস্টল করে নিতে পারেন।
+
+---
+
+## ৬. মাইগ্রেশন রোলব্যাক ও পরিবর্তন (Rollback, Reset, Fresh & Refresh)
+
+মাইগ্রেশনে কোনো কলামের নাম বা ডাটা টাইপ ভুল হলে, আমরা নিচের কমান্ডগুলোর সাহায্য নিয়ে ডাটাবেজ রিসেট বা রোলব্যাক করতে পারি:
+
+### ক. সর্বশেষ মাইগ্রেশন রোলব্যাক করা:
+পূর্ববর্তী ধাপে চালানো সর্বশেষ মাইগ্রেশন ব্যাচটি বাতিল করতে:
+```bash
+php artisan migrate:rollback
+```
+যেমন: আমরা যদি কোনো টেবিলে নতুন কলাম `isAdmin` যোগ করতে চাই:
+```php
+$table->boolean('isAdmin')->default(false);
+```
+মাইগ্রেশন রান করার পর ভুল ধরা পড়লে আমরা `migrate:rollback` করে ফাইলটি এডিট করে পুনরায় `php artisan migrate` রান করতে পারবো।
+
+### খ. সমস্ত মাইগ্রেশন রোলব্যাক করা (Reset):
+ডাটাবেজের সমস্ত টেবিলের মাইগ্রেশন একসাথে রোলব্যাক করতে:
+```bash
+php artisan migrate:reset
+```
+
+### গ. সমস্ত টেবিল ড্রপ করে নতুন করে মাইগ্রেশন চালানো (Fresh):
+ডাটাবেজের সব টেবিল ডিলিট (Drop) করে একদম নতুন করে সব মাইগ্রেশন রান করতে:
+```bash
+php artisan migrate:fresh
+```
+
+### ঘ. রোলব্যাক করে পুনরায় মাইগ্রেশন চালানো (Refresh):
+ডাটাবেজের সমস্ত টেবিল রোলব্যাক বা ডাউন করে পুনরায় নতুন করে মাইগ্রেশন চালাতে:
+```bash
+php artisan migrate:refresh
+```
+
+> [!NOTE]
+> **Fresh এবং Refresh কমান্ডের মধ্যে পার্থক্য:**
+> - `migrate:fresh` কমান্ডটি ডাটাবেজের সমস্ত টেবিলকে সরাসরি ড্রপ (Drop) করে দেয়; এটি মাইগ্রেশন ফাইলের `down()` মেথড কল করে না।
+> - `migrate:refresh` কমান্ডটি প্রতিটি মাইগ্রেশন ফাইলের `down()` মেথড এক এক করে কল করে রোলব্যাক সম্পন্ন করে এবং এরপর আবার `up()` মেথড রান করে।
+
+---
+
+## ৭. রানিং ডাটাবেজে নতুন কলাম যুক্ত করা (Adding Columns to Existing Table)
+
+ইতিমধ্যে তৈরি হওয়া কোনো টেবিলে নতুন কলাম যোগ করতে চাইলে নতুন একটি মাইগ্রেশন ফাইল তৈরি করতে হবে:
+
+```bash
+php artisan make:migration add_post_id_column_to_comments_table
+```
+*(মাইগ্রেশনের নাম দেওয়ার সময় স্পেসের পরিবর্তে আন্ডারস্কোর `_` ব্যবহার করা উত্তম।)*
+
+### ক. মাইগ্রেশন ফাইলে কলাম ডিফাইন করা:
+```php
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    public function up(): void
+    {
+        Schema::table('comments', function (Blueprint $table) {
+            // foreignId যুক্ত করা হলো যা comments টেবিলের সাথে posts টেবিলকে রিলেট করবে
+            $table->foreignId('post_id')->constrained();
+        });
+    }
+
+    public function down(): void
+    {
+        Schema::table('comments', function (Blueprint $table) {
+            // রোলব্যাক করার সময় কলামটি ড্রপ করা হবে
+            $table->dropColumn('post_id');
+        });
+    }
+};
+```
+*(এখানে `constrained()` মেথড ব্যবহার করায় লারাভেল অটোমেটিক্যালি এটিকে `users` বা সংশ্লিষ্ট টেবিলের `id` কলামের সাথে ম্যাপ করে নেবে।)*
+
+### খ. নির্দিষ্ট কলামের পরে যুক্ত করা (Column Modifiers):
+আমরা চাইলে কোনো নির্দিষ্ট কলামের পর নতুন কলামটি বসাতে পারি (যেমন: `is_admin` কলামের পরে):
+```php
+$table->foreignId('post_id')->after('is_admin')->constrained();
+```
+> [!WARNING]
+> কলাম সাজানোর এই `after()` মেডিফায়ারটি শুধুমাত্র **MySQL** এবং **PostgreSQL** ডাটাবেজের ক্ষেত্রে কাজ করে; **SQLite** ডাটাবেজে এটি সাপোর্ট করে না।
+
