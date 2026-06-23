@@ -1,5 +1,8 @@
 # CSS Box Sizing
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** সিএসএস বক্স সাইজিং (Box Sizing) কি এবং content-box ও border-box এর পার্থক্য উদাহরণসহ লিখ
+
 বক্স মডেলের হিসাব সহজ করার জন্য `box-sizing` প্রোপার্টি ব্যবহৃত হয়।
 
 ### ১. content-box (Default)

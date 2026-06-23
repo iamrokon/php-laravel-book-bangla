@@ -1,5 +1,8 @@
 # Composition, Inheritance & Dependency Injection
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** কম্পোজিশন, ইনহেরিটেন্স এবং ডিপেন্ডেন্সি ইনজেকশন (Dependency Injection) কি এবং এদের পার্থক্য উদাহরণসহ লিখ
+
 ## Inheritance vs Composition
 - **Inheritance (`is-a` relationship):** যখন একটি ক্লাস প্যারেন্ট ক্লাসের বৈশিষ্ট্যগুলো অ্যাক্সেস করে।
 - **Composition (`has-a` relationship):** যখন একটি ক্লাসের ভেতরে অন্য আরেকটি ক্লাসের অবজেক্টকে প্রোপার্টি হিসেবে ব্যবহার করা হয়।

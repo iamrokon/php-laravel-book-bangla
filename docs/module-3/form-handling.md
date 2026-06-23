@@ -1,5 +1,8 @@
 # Form Handling in PHP (Registration & Login)
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** পিএইচপি তে ফর্ম হ্যান্ডলিং কীভাবে করা হয় এবং গেট (GET) ও পোস্ট (POST) মেথডের ব্যবহার উদাহরণসহ লিখ
+
 ## Basic Setup
 
 ### 1. Database Connection (PDO)

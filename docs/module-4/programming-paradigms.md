@@ -1,5 +1,8 @@
 # Programming Paradigm in PHP
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** প্রোগ্রামিং প্যারাডাইম কি এবং পিএইচপি তে কি কি প্রোগ্রামিং প্যারাডাইম সাপোর্ট করে আলোচনা কর
+
 ## What is Programming Paradigm?
 Paradigm বলতে বোঝায় আমরা কীভাবে কোনো একটা জিনিসকে দেখি বা বুঝতে পারি (Point of view / The way we interpret something)।
 আগে আমরা কোনো জিনিসকে যেভাবে চিন্তা করতাম, সেটাকে নতুনভাবে চিন্তা করাই হলো **Paradigm Shift**।

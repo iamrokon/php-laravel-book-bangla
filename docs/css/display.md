@@ -1,5 +1,8 @@
 # CSS Display
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** সিএসএস ডিসপ্লে (Display) প্রোপার্টি কি এবং Block, Inline ও Inline-block এর পার্থক্য উদাহরণসহ লিখ
+
 CSS-এ এলিমেন্টগুলো স্ক্রিনে কীভাবে দেখাবে তা নির্ধারণ করতে `display` প্রোপার্টি ব্যবহৃত হয়।
 
 ### ১. Block vs Inline vs Inline-block

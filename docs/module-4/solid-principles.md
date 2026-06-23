@@ -1,5 +1,8 @@
 # SOLID Principles in PHP
 
+> [!IMPORTANT]
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** সলিড (SOLID) প্রিন্সিপাল কি এবং পিএইচপি তে ৫টি সলিড প্রিন্সিপাল উদাহরণসহ ব্যাখ্যা কর
+
 সফটওয়্যার তৈরি করার সময় কোডের Reusability, Maintainability এবং Extendability নিশ্চিত করতে **SOLID Principles** খুবই গুরুত্বপূর্ণ। এখানে ৫টি নিয়মের বর্ণনা দেওয়া হলো:
 
 ## 1. Single Responsibility Principle (SRP)
