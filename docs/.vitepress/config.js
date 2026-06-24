@@ -9,6 +9,7 @@ export default {
             { text: "CSS", link: "/css/introduction" },
             { text: "JavaScript", link: "/coming-soon" },
             { text: "React", link: "/react/introduction" },
+            { text: "Next.js", link: "/nextjs/index" },
             { text: "Python", link: "/coming-soon" },
             { text: "Node.js", link: "/coming-soon" },
         ],
@@ -225,16 +226,35 @@ export default {
                     collapsed: false,
                     items: [
                         { text: '১. রিঅ্যাক্ট কী ও কীভাবে কাজ করে?', link: '/react/introduction' },
-                        { text: '২. ভার্চুয়াল ডম ব্যাখ্যা', link: '/react/virtual-dom' },
+                        { text: '২. ভার্চুয়াল ডম ব্যাখ্যা', link: '/react/virtual-dom' },
                         { text: '৩. ইনস্টলেশন ও সেটআপ', link: '/react/installation' },
                         { text: '৪. JSX ও এলিমেন্ট রেন্ডারিং', link: '/react/jsx-rendering' },
                         { text: '৫. কম্পোনেন্ট ও প্রপস', link: '/react/components-props' },
                         { text: '৬. ফর্ম হ্যান্ডলিং', link: '/react/forms' },
                         { text: '৭. স্টেট লিফটিং', link: '/react/lifting-state-up' },
                         { text: '৮. কম্পোজিশন বনাম ইনহেরিটেন্স', link: '/react/composition-inheritance' },
-                        { text: '৯. হায়ার অর্ডার কম্পোনেন্ট (HOC)', link: '/react/higher-order-components' },
+                        { text: '৯. হায়ার অর্ডার কম্পোনেন্ট (HOC)', link: '/react/higher-order-components' },
                         { text: '১০. রিঅ্যাক্ট কনটেক্সট এপিআই (Context API)', link: '/react/context-api' },
-                        { text: '১১. রিঅ্যাক্ট হুকস (React Hooks)', link: '/react/react-hooks' },
+                        { text: '১১. রিঅ্যাক্ট হুকস, useReducer ও Custom Hook', link: '/react/react-hooks' },
+                    ]
+                }
+            ],
+
+            // Next.js Sidebar
+            '/nextjs/': [
+                {
+                    text: 'Next.js পরিচিতি',
+                    collapsed: false,
+                    items: [
+                        { text: 'Next.js কী ও কেন?', link: '/nextjs/index' },
+                    ]
+                },
+                {
+                    text: 'রেন্ডারিং ও ক্যাশিং',
+                    collapsed: false,
+                    items: [
+                        { text: '১. Next.js ক্যাশিং ও রেন্ডারিং', link: '/nextjs/caching' },
+                        { text: '২. Next.js ক্র্যাশ কোর্স', link: '/nextjs/crash-course' },
                     ]
                 }
             ]

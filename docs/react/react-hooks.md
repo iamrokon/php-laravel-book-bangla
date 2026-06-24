@@ -365,6 +365,567 @@ export default function App() {
 ### কেন `React.memo` একা যথেষ্ট নয়?
 আমরা যদি `Title`, `ShowCount` এবং `Button` কম্পোনেন্টগুলোকে `React.memo` দিয়ে এক্সপোর্ট করি (যেমন: `export default React.memo(Button)`), তবুও বাটন ক্লিক করলে অন্যান্য বাটনগুলো রি-রেন্ডার হবে। 
 
-এর কারণ জাভাস্ক্রিপ্টে দুটি ফাংশন দেখতে এক হলেও রেফারেন্সিয়াল তুলনা করলে তারা সমান নয় (`function() {} !== function() {}`)। প্রতি রেন্ডারে `incrementByOne` এবং `incrementByFive` এর নতুন মেমোরি রেফারেন্স তৈরি হয়। ফলে `React.memo` মনে করে প্রপস পরিবর্তিত হয়েছে এবং চাইল্ড বাটন পুনরায় রেন্ডার করে।
+এর কারণ জাভাস্ক্রিপ্টে দুটি ফাংশন দেখতে এক হলেও রেফারেন্সিয়াল তুলনা করলে তারা সমান নয় (`function() {} !== function() {}`)। প্রতি রেন্ডারে `incrementByOne` এবং `incrementByFive` এর নতুন মেমোরি রেফারেন্স তৈরি হয়। ফলে `React.memo` মনে করে প্রপস পরিবর্তিত হয়েছে এবং চাইল্ড বাটন পুনরায় রেন্ডার করে.
 
-**সমাধান:** ফাংশনগুলোকে `useCallback` দিয়ে মুড়ে দিলে রিঅ্যাক্ট প্রথম রেন্ডারের পর থেকে ফাংশনের রেফারেন্সটি ক্যাশ করে রাখবে এবং দ্বিতীয় বাটন ক্লিক করলে কেবল দ্বিতীয় বাটনের লজিকটুকুই রেন্ডার হবে, বাকি সমস্ত কম্পোনেন্ট অপরিবর্তিত থাকবে।
+**সমাধান:** ফাংশনগুলোকে `useCallback` দিয়ে মুড়ে দিলে রিঅ্যাক্ট প্রথম রেন্ডারের পর থেকে ফাংশনের রেফারেন্সটি ক্যাশ করে রাখবে এবং দ্বিতীয় বাটন ক্লিক করলে কেবল দ্বিতীয় বাটনের লজিকটুকুই রেন্ডার হবে, বাকি সমস্ত কম্পোনেন্ট অপরিবর্তিত থাকবে।
+
+---
+
+## ৭. useReducer হুক
+
+`useReducer` হলো `useState`-এর একটি বিকল্প হুক, যা জটিল স্টেট লজিক পরিচালনার জন্য বিশেষভাবে উপযুক্ত। এটি Redux-এর রিডিউসার প্যাটার্নের সাথে সামঞ্জস্যপূর্ণ।
+
+ধরা যাক, বাটনে ক্লিক করলে আমরা কাজ করব:
+
+```html
+<button id="myBtn" type="button">Click here</button>
+<script>
+const button = document.getElementById("myBtn");
+button.addEventListener("click", () => {
+  console.log("Button was clicked");
+});
+</script>
+```
+
+উপরের মতো করেই আমরা `useReducer` দিয়ে কাজ করব। এখানে `action` থাকবে — `increment`-এর জন্য একটা action, `decrement`-এর জন্য একটা action।
+
+### সহজ Counter উদাহরণ
+
+**`src/components/Counter.js`**
+
+```javascript
+import React, { useReducer } from 'react';
+
+const initialState = 0;
+
+const reducer = (state, action) => {
+  switch (action) {
+    case 'increment':
+      return state + 1;
+    case 'decrement':
+      return state - 1;
+    default:
+      return state;
+  }
+};
+
+export default function Counter() {
+  const [count, dispatch] = useReducer(reducer, initialState);
+  // useReducer() ফাংশনটি একটি স্টেট রিটার্ন করে।
+
+  return (
+    <div>
+      <div>Count : {count}</div>
+      <button type="button" onClick={() => dispatch('increment')}>
+        Increment
+      </button>
+      <button type="button" onClick={() => dispatch('decrement')}>
+        Decrement
+      </button>
+    </div>
+  );
+}
+```
+
+### Action Object সহ useReducer
+
+`useReducer`-এর সাথে Redux-এর সমন্বয় আছে। তবে Redux থেকে `useReducer` টা একটু আলাদা। এখানে `action`-এর ভেতর সরাসরি `increment` বা `decrement` না হয়ে `action`-এর একটি `type` থাকে। আর সেই `type` নামে একটি কন্ডিশন থাকে — তখন আমরা `increment` বা `decrement` করি।
+
+**`src/components/ComplexCounter.js`**
+
+```javascript
+import React, { useReducer } from 'react';
+
+const initialState = {
+  counter: 0,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { counter: state.counter + 1 };
+    case 'decrement':
+      return { counter: state.counter - 1 };
+    default:
+      return state;
+  }
+};
+
+export default function Counter() {
+  const [count, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div>
+      <div>Count : {count.counter}</div>
+      <button type="button" onClick={() => dispatch({ type: 'increment' })}>
+        Increment
+      </button>
+      <button type="button" onClick={() => dispatch({ type: 'decrement' })}>
+        Decrement
+      </button>
+    </div>
+  );
+}
+```
+
+**`App.js`**
+```javascript
+import ComplexCounter from './components/ComplexCounter';
+
+export default function App() {
+  return <ComplexCounter />;
+}
+```
+
+### Action-এ অতিরিক্ত প্রপার্টি (value)
+
+যখন স্টেট ও action-কে object বানাতে হয় তখন তা হলো action টাইপ। এর মধ্যে অনেক প্রপার্টি দেওয়া যায়। আমরা চাই কখনো ১ করে বাড়াতে, কখনো ২ করে, কখনো ৩ করে — অর্থাৎ আমরা এখানে `action`-এর আরেকটি প্রপার্টি দিতে পারি।
+
+**`ComplexCounter.js`** — reducer আপডেট:
+
+```javascript
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { counter: state.counter + action.value };
+    case 'decrement':
+      return { counter: state.counter - action.value };
+    default:
+      return state;
+  }
+};
+```
+
+```jsx
+return (
+  <div>
+    <button
+      type="button"
+      onClick={() => dispatch({ type: 'increment', value: 1 })}
+    >
+      Increment by 1
+    </button>
+    <button
+      type="button"
+      onClick={() => dispatch({ type: 'increment', value: 5 })}
+    >
+      Increment by 5
+    </button>
+    <button
+      type="button"
+      onClick={() => dispatch({ type: 'decrement', value: 1 })}
+    >
+      Decrement by 1
+    </button>
+  </div>
+);
+```
+
+### Multiple State হ্যান্ডেল করা
+
+**`ComplexCounter.js`** — multiple state:
+
+```javascript
+const initialState = {
+  counter: 0,
+  counter2: 0,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'increment':
+      return { ...state, counter: state.counter + action.value };
+    case 'decrement':
+      return { ...state, counter: state.counter - action.value };
+    case 'increment2':
+      return { ...state, counter2: state.counter2 + action.value };
+    case 'decrement2':
+      return { ...state, counter2: state.counter2 - action.value };
+    default:
+      return state;
+  }
+};
+```
+
+```jsx
+return (
+  <div>
+    <div>Count - {count.counter}</div>
+    <button type="button" onClick={() => dispatch({ type: 'increment', value: 5 })}>
+      Increment by 5
+    </button>
+    <button type="button" onClick={() => dispatch({ type: 'decrement', value: 5 })}>
+      Decrement by 5
+    </button>
+
+    <div>Count 2 - {count.counter2}</div>
+    <button type="button" onClick={() => dispatch({ type: 'increment2', value: 1 })}>
+      Increment by 1
+    </button>
+    <button type="button" onClick={() => dispatch({ type: 'decrement2', value: 1 })}>
+      Decrement by 1
+    </button>
+  </div>
+);
+```
+
+### একই Reducer দিয়ে Multiple Counter
+
+Local স্টেটের ক্ষেত্রে যদি আমাদের উপরের মতো multiple বাটন তৈরি করতে হয়, তবে তার চেয়ে ভালো অ্যাপ্রোচ প্যাটার্ন আছে। একই reducer একাধিকবার ব্যবহার করা যায়।
+
+**`src/components/CounterThree.js`**
+
+```javascript
+import React, { useReducer } from 'react';
+
+const initialState = 0;
+const initialState2 = 5;
+
+const reducer = (state, action) => {
+  switch (action) {
+    case 'increment':
+      return state + 1;
+    case 'decrement':
+      return state - 1;
+    default:
+      return state;
+  }
+};
+
+export default function Counter() {
+  const [count, dispatch] = useReducer(reducer, initialState);
+  const [count2, dispatch2] = useReducer(reducer, initialState2);
+
+  return (
+    <div>
+      <div>
+        <div>Count - {count}</div>
+        <button type="button" onClick={() => dispatch('increment')}>
+          Increment
+        </button>
+        <button type="button" onClick={() => dispatch('decrement')}>
+          Decrement
+        </button>
+      </div>
+
+      <div>
+        <div>Count2 - {count2}</div>
+        <button type="button" onClick={() => dispatch2('increment')}>
+          Increment
+        </button>
+        <button type="button" onClick={() => dispatch2('decrement')}>
+          Decrement
+        </button>
+      </div>
+    </div>
+  );
+}
+```
+
+### Global State-এর জন্য useReducer + useContext
+
+ধরা যাক, আমাদের একটি কম্পোনেন্ট `A`, তার মধ্যে আছে `B`, তার মধ্যে আছে `C`, তার মধ্যে আছে `D`।
+
+এবার আমরা গ্লোবাল স্টেটের জন্য `useReducer`-এর ব্যবহার দেখব। আমাদের স্টেটটি আছে `App` কম্পোনেন্টে। সেখানে আমরা `useReducer` দিয়ে স্টেট ম্যানেজ করছি।
+
+আমরা কীভাবে তা কম্পোনেন্ট A, B, C, D-তে এই স্টেটটা পাস করতে পারি তা দেখব। আমরা `useContext` হুক, Context API এবং `useReducer` হুক এখানে ব্যবহার করব।
+
+আমরা `ComponentB` থেকে `dispatch` মেথড কল করব। আর তা পাব `App` কম্পোনেন্ট থেকে।
+
+**`App.js`**
+
+```javascript
+import React, { useReducer } from 'react';
+import ComponentA from './components/ComponentA';
+
+export const CounterContext = React.createContext(); // কনটেক্সট তৈরি করলাম
+
+const initialState = 0;
+
+const reducer = (state, action) => {
+  switch (action) {
+    case 'increment':
+      return state + 1;
+    case 'decrement':
+      return state - 1;
+    default:
+      return state;
+  }
+};
+
+export default function App() {
+  const [count, dispatch] = useReducer(reducer, initialState);
+
+  return (
+    <div className="app">
+      <div>Count : {count}</div>
+      <CounterContext.Provider value={{ count, dispatch }}>
+        <ComponentA />
+      </CounterContext.Provider>
+    </div>
+  );
+}
+```
+
+তখন আমরা `ComponentB`-তে `useContext`-এর মাধ্যমে `dispatch`-কে access করব।
+
+**`ComponentA.js`**
+
+```javascript
+import React from 'react';
+import ComponentB from './ComponentB';
+
+export default function ComponentA() {
+  return (
+    <div>
+      <ComponentB />
+    </div>
+  );
+}
+```
+
+**`ComponentB.js`**
+
+```javascript
+import React, { useContext } from 'react';
+import { CounterContext } from '../App';
+
+export default function ComponentB() {
+  const countContext = useContext(CounterContext);
+
+  return (
+    <div>
+      <p>Component B</p>
+      <button
+        type="button"
+        onClick={() => countContext.dispatch('increment')}
+      >
+        Increment
+      </button>
+      <button
+        type="button"
+        onClick={() => countContext.dispatch('decrement')}
+      >
+        Decrement
+      </button>
+    </div>
+  );
+}
+```
+
+### useReducer দিয়ে Data Fetch করা
+
+**`GetPost.js`** — `useState` দিয়ে:
+
+```javascript
+import React, { useState, useEffect } from 'react';
+
+export default function GetPost() {
+  const [loading, setLoading] = useState(true);  // লোডিং ম্যানেজ করার জন্য
+  const [error, setError] = useState('');         // এরর হ্যান্ডেল করার জন্য
+  const [post, setPost] = useState({});           // ডেটা স্টোর করার জন্য
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts/1')
+      .then((response) => response.json())        // fetch api মূলত promise রিটার্ন করে
+      .then((data) => {
+        setLoading(false);
+        setPost(data);
+        setError('');
+      })
+      .catch((e) => {
+        setLoading(false);
+        setError('There was a problem');
+      });
+  }, []);
+
+  return (
+    <div>
+      {loading ? 'Loading...' : post.title}
+      {error || null}
+    </div>
+  );
+}
+```
+
+**`GetPost2.js`** — `useReducer` দিয়ে:
+
+```javascript
+import React, { useReducer, useEffect } from 'react';
+
+const initialState = {
+  loading: true,
+  error: '',
+  post: {},
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'SUCCESS':
+      return {
+        loading: false,
+        post: action.result,
+        error: '',
+      };
+    case 'ERROR':
+      return {
+        loading: false,
+        post: {},
+        error: 'There was a problem fetching!',
+      };
+    default:
+      return state;
+  }
+};
+
+export default function GetPost2() {
+  const [state, dispatch] = useReducer(reducer, initialState);
+
+  useEffect(() => {
+    fetch('https://jsonplaceholder.typicode.com/posts/1')
+      .then((response) => response.json())
+      .then((data) => {
+        dispatch({ type: 'SUCCESS', result: data });
+      })
+      .catch(() => {
+        dispatch({ type: 'ERROR' });
+      });
+  }, []);
+
+  return (
+    <div>
+      {state.loading ? 'Loading...' : state.post.title}
+      {state.error || null}
+    </div>
+  );
+}
+```
+
+`useReducer` ব্যবহার করার আমাদের যে লাভ হবে সেটা হলো আমাদের অ্যাপ্লিকেশনের পুরো বিজনেস লজিকটা একটি রিডিউসার কম্পোনেন্টের মধ্যে থাকবে। কিন্তু `useState`-এর ক্ষেত্রে তা থাকে না। ফলে বিজনেস লজিক বোঝা কঠিন।
+
+### কখন কোনটা ব্যবহার করব?
+
+| বিষয় | `useState` | `useReducer` |
+| :--- | :--- | :--- |
+| **state change-এর সংখ্যা** | একটা, দুটো বা সর্বোচ্চ তিনটি | অনেক বেশি হলে `useReducer` ব্যবহার করব |
+| **একটি state change অন্যটির উপর নির্ভরশীল?** | না | হ্যাঁ (যেমন- data fetch-এর success/error রিলেটেড কাজ) |
+| **state-এর ধরন** | `string`, `number`, `boolean` | `Object`, `Array` |
+| **complex logic আছে?** | না | হ্যাঁ |
+| **state-এর scope** | Local | Global |
+
+---
+
+## ৮. Custom Hook
+
+এখন পর্যন্ত আমরা যতগুলো hook শিখেছি সেগুলোতে একটি জিনিস কমন ছিল — সেটি হলো প্রতিটি hook-এর শুরুতে `use` থাকে। আমাদের custom hook-এর নামের শুরুতেও `use` রাখতে হবে। আমাদের এমন প্রয়োজন যেন আমরা বিভিন্ন কম্পোনেন্টের মধ্যে লজিক শেয়ার করতে পারি। Higher Order Component এবং Render Props-এর মাধ্যমেও লজিক শেয়ার করা যায়। ফাংশনাল কম্পোনেন্টে custom hooks ব্যবহার হয়।
+
+### LayoutComponent উদাহরণ
+
+`LayoutComponent.js` — আমাদের ডিভাইসের একটি নির্দিষ্ট `width`-এর নিচে হলে "You are browsing on small device" এবং উপরে হলে "You are browsing on large device" মেসেজ দেবে। এই কম্পোনেন্টে ছোট-বড় করার একটি side effect আছে, এজন্য আমরা `useEffect` ব্যবহার করব। এছাড়া আমাদের state-এর একটা track রাখতে হবে যে ডিভাইসটি small না large। তাই আমাদের `useState` ও `useEffect` লাগবে।
+
+**`LayoutComponent.js`**
+
+```javascript
+import React, { useState, useEffect } from 'react';
+
+export default function LayoutComponent() {
+  const [onSmallScreen, setOnSmallScreen] = useState(false);
+
+  const checkScreenSize = () => {
+    setOnSmallScreen(window.innerWidth < 768);
+  };
+
+  useEffect(() => {
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, []);
+
+  return (
+    <div>
+      <h1>You are browsing on {onSmallScreen ? 'small' : 'large'} device</h1>
+    </div>
+  );
+}
+```
+
+এবার আমরা একই ধরনের আরেকটি কম্পোনেন্ট নেব যেটার নাম হবে `LayoutComponentTwo.js`:
+
+```javascript
+export default function LayoutComponentTwo() {
+  // onSmallScreen state এখানেও দরকার
+  return (
+    <div className={onSmallScreen ? 'small' : 'large'}>
+      <h1>This is another component</h1>
+    </div>
+  );
+}
+```
+
+ভেতরে যখন আমাদের resizing দরকার তখন আমাদের কোড বারবার লিখতে হচ্ছে। এটা থেকে মুক্তি পাওয়ার জন্যই মূলত এই custom hook।
+
+### useWindowWidth Custom Hook তৈরি
+
+**`useWindowWidth.js`**
+
+```javascript
+import { useState, useEffect } from 'react';
+
+const useWindowWidth = (screenSize) => {
+  const [onSmallScreen, setOnSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      setOnSmallScreen(window.innerWidth < screenSize);
+    };
+    // যেহেতু এটি ফাংশন তাই বারবার কল হবে। ফলে কন্ডিশন ঠিক থাকবে।
+    // তাই useEffect-এর মধ্যে দিয়েছি।
+    checkScreenSize();
+    window.addEventListener('resize', checkScreenSize);
+    return () => window.removeEventListener('resize', checkScreenSize);
+  }, [screenSize]);
+
+  return onSmallScreen;
+};
+
+export default useWindowWidth;
+```
+
+এই hook-টা আমরা আমাদের দুই কম্পোনেন্টে ব্যবহার করব।
+
+**`LayoutComponent.js`** — custom hook ব্যবহার করে:
+
+```javascript
+import React from 'react';
+import useWindowWidth from '../hooks/useWindowWidth';
+
+export default function LayoutComponent() {
+  const onSmallScreen = useWindowWidth(600);
+
+  return (
+    <div>
+      <h1>You are browsing on {onSmallScreen ? 'small' : 'large'} device</h1>
+    </div>
+  );
+}
+```
+
+**`LayoutComponentTwo.js`** — একই custom hook:
+
+```javascript
+import React from 'react';
+import useWindowWidth from '../hooks/useWindowWidth';
+
+export default function LayoutComponentTwo() {
+  const onSmallScreen = useWindowWidth(768);
+
+  return (
+    <div className={onSmallScreen ? 'small' : 'large'}>
+      <h1>This is another component</h1>
+    </div>
+  );
+}
+```
+
+> [!TIP]
+> কাস্টম hook যেহেতু একটি ফাংশন তাই আমরা চাইলে parameter পাঠাতে পারি। কাস্টম hook শুধু JSON রিটার্ন করার প্রয়োজন নেই — যেকোনো ধরনের মান রিটার্ন করতে পারে।
