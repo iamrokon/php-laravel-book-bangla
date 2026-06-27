@@ -284,3 +284,201 @@ Route::get('/benchmark', function () {
 ]
 ```
 *(কুয়েরি বিল্ডার এক্ষেত্রে বেশ দ্রুত রেসপন্স করে থাকে!)*
+
+---
+
+## ৯. অ্যাডভান্সড কুয়েরি বিল্ডার ও ডিবি অপারেশনস (Advanced Query Builder & DB Operations)
+
+অ্যাপ্লিকেশনের জটিল কুয়েরি ও রিপোর্ট তৈরির জন্য ডাটাবেজ কুয়েরি বিল্ডারের উন্নত মেথডগুলো জানা অত্যন্ত জরুরী। নিচে সেগুলো ডিটেইলস আলোচনা করা হলো:
+
+### ক. সুনির্দিষ্ট কলামের মান ও অ্যাগ্রিগেট মেথডস (Value, Pluck & Aggregates):
+অনেক সময় আমাদের সম্পূর্ণ মডেল বা অবজেক্টের ডেটা না নিয়ে শুধুমাত্র একটি কলামের মান বা নির্দিষ্ট কিছু হিসাব (যেমন: গড়, সর্বোচ্চ মান) করার প্রয়োজন পড়ে।
+
+- **`value()`:** শুধুমাত্র একটি নির্দিষ্ট কলামের সিঙ্গেল ভ্যালু রিটার্ন করে (কালেকশন বা অবজেক্ট নয়)।
+  ```php
+  $email = DB::table('users')->where('name', 'John')->value('email');
+  // Output: "john@example.com"
+  ```
+- **`find()` মেথডের ২য় প্যারামিটার:** আইডি দিয়ে খুঁজে পাওয়ার সাথে সাথে নির্দিষ্ট কলাম সিলেক্ট করা যায়:
+  ```php
+  $user = DB::table('users')->find(1, ['id', 'name', 'email']);
+  // Output: { "id": 1, "name": "Rebeka Meder", "email": "rebeka@example.com" }
+  ```
+- **`pluck()`:** একটি টেবিলের নির্দিষ্ট কলামের সমস্ত মান নিয়ে একটি কালেকশন তৈরি করে:
+  ```php
+  $titles = DB::table('users')->pluck('name'); // এটি একটি Collection রিটার্ন করবে।
+  ```
+- **অ্যালাইয়াস (Alias) ব্যবহার করা:**
+  ```php
+  $users = DB::table('users')
+      ->select('name', 'email as user_email')
+      ->get();
+  ```
+- **`distinct()`:** ডুপ্লিকেট বাদ দিয়ে শুধুমাত্র ইউনিক মানগুলো তুলে আনে:
+  ```php
+  $users = DB::table('users')->distinct()->get();
+  ```
+- **ডাটাবেজ লেভেল অ্যাগ্রিগেটস (Fast Aggregates):** পিএইচপি লেভেলে কাউন্ট বা এভারেজ করার চেয়ে ডাটাবেজ লেভেলে করা অনেক দ্রুত ও মেমোরি সেভিং।
+  ```php
+  $count = DB::table('users')->count(); // সরাসরি COUNT(*) কোয়েরি রান হবে
+  $maxPrice = DB::table('orders')->max('price'); // সর্বোচ্চ মূল্য
+  $avgPrice = DB::table('orders')->avg('price'); // গড় মূল্য
+  ```
+
+---
+
+### খ. র কুয়েরি ব্যবহার করা (Raw SQL Queries):
+কুয়েরি বিল্ডারে যখন জটিল গাণিতিক হিসাব বা ডাটাবেজ স্পেসিফিক ফাংশন ব্যবহার করতে হয়, তখন **Raw Queries** ব্যবহার করতে হয়। লারাভেলে সিকিউরড উপায়ে র কুয়েরি লেখার জন্য বেশ কয়েকটি মেথড রয়েছে:
+
+> [!WARNING]
+> সরাসরি `DB::raw()` মেথডের ভেতর ইউজারের ইনপুট করা কোনো ভেরিয়েবল পাস করা উচিত নয়, কারণ এতে **SQL Injection** এর ঝুঁকি থাকে। নিরাপদে ডাটা পাস করার জন্য প্লেসহোল্ডার এবং বাইন্ডিং ব্যবহার করা উচিত।
+
+- **`DB::raw()`:** কুয়েরির যেকোনো অংশে র এক্সপ্রেসন ইঞ্জেক্ট করতে ব্যবহৃত হয়।
+  ```php
+  $users = DB::table('users')
+      ->select(DB::raw('count(*) as user_count, status'))
+      ->where('status', '<>', 1)
+      ->groupBy('status')
+      ->get();
+  ```
+- **`selectRaw()`:** সরাসরি সিলেক্ট কুয়েরির ভেতর নিরাপদে প্লেসহোল্ডার সহ র কোড লেখা যায়:
+  ```php
+  $orders = DB::table('orders')
+      ->selectRaw('price * ? as price_with_tax', [1.0825]) // প্লেসহোল্ডার '?' ব্যবহার করা হয়েছে
+      ->get();
+  ```
+- **`whereRaw()` / `orWhereRaw()`:** কন্ডিশনের ভেতর র কুয়েরি রান করতে:
+  ```php
+  $orders = DB::table('orders')
+      ->whereRaw('price > IF(state = "TX", ?, 100)', [200])
+      ->get();
+  ```
+- **`havingRaw()`:** গ্রুপ-বাই করার পর কন্ডিশন ফিল্টার করতে:
+  ```php
+  $orders = DB::table('orders')
+      ->select('department', DB::raw('SUM(price) as total_sales'))
+      ->groupBy('department')
+      ->havingRaw('SUM(price) > ?', [2500])
+      ->get();
+  ```
+- **`orderByRaw()` & `groupByRaw()`:** সর্টিং ও গ্রুপিংয়ে র কুয়েরি ব্যবহার:
+  ```php
+  $orders = DB::table('orders')
+      ->orderByRaw('updated_at, created_at DESC')
+      ->get();
+
+  $orders = DB::table('orders')
+      ->select('city', 'state')
+      ->groupByRaw('city, state')
+      ->get();
+  ```
+
+---
+
+### গ. জয়েন অপারেশনস (Database Join Operations - Deep Dive):
+একাধিক টেবিলের মধ্যে সম্পর্ক স্থাপন করে সম্মিলিত ফলাফল পাওয়ার জন্য ডাটাবেজ জয়েন (Join) ব্যবহৃত হয়।
+
+#### ১. ইনার জয়েন (Inner Join):
+উভয় টেবিলে ম্যাচ করা কমন ডাটাগুলো শুধুমাত্র আউটপুটে আসবে।
+```php
+$users = DB::table('users')
+    ->join('contacts', 'users.id', '=', 'contacts.user_id')
+    ->join('orders', 'users.id', '=', 'orders.user_id')
+    ->select('users.*', 'contacts.phone', 'orders.price')
+    ->get();
+```
+
+#### ২. লেফট জয়েন (Left Join):
+বাম টেবিলের সমস্ত ডাটা আসবে, এবং ডান টেবিলের শুধুমাত্র ম্যাচিং কমন ডাটাগুলো আসবে (ডান টেবিলে ম্যাচ না করলে `null` দেখাবে)।
+```php
+$users = DB::table('users')
+    ->leftJoin('posts', 'users.id', '=', 'posts.user_id')
+    ->get();
+```
+
+#### ৩. ক্রস জয়েন (Cross Join):
+এক টেবিলের প্রতিটি রো এর সাথে অন্য টেবিলের প্রতিটি রো এর গুণফল (Cartesian Product) তৈরি করে।
+```php
+$sizes = DB::table('sizes')
+    ->crossJoin('colors')
+    ->get();
+```
+
+#### ৪. ক্লোজার ব্যবহার করে অ্যাডভান্সড জয়েন (Advanced Join Clauses):
+জটিল কন্ডিশন বা একাধিক অন (`on`) ক্লজের ওপর ভিত্তি করে জয়েন দেওয়ার জন্য ক্লোজার ফাংশন ব্যবহার করা যায়:
+```php
+DB::table('users')
+    ->join('contacts', function ($join) {
+        $join->on('users.id', '=', 'contacts.user_id')
+             ->where('contacts.user_id', '>', 5);
+    })
+    ->get();
+```
+
+#### ৫. সাবকুয়েরি জয়েন (Subquery Joins):
+একটি কুয়েরির ফলাফলের ওপর ভিত্তি করে অন্য টেবিল জয়েন করতে `joinSub()` ব্যবহার করা যায়:
+```php
+$latestPost = DB::table('posts')
+    ->select('user_id', DB::raw('MAX(created_at) as last_post_created_at'))
+    ->where('is_published', true)
+    ->groupBy('user_id');
+
+$users = DB::table('users')
+    ->joinSub($latestPost, 'latest_posts', function ($join) {
+        $join->on('users.id', '=', 'latest_posts.user_id');
+    })
+    ->get();
+```
+
+---
+
+### ঘ. রেজাল্টসেট মার্জ করা (Union and UnionAll):
+দুটি কুয়েরির ফলাফলকে একসাথে মার্জ করতে `union()` ব্যবহার করা হয়। (মনে রাখবেন, উভয় কুয়েরিতে কলামের সংখ্যা ও টাইপ সমান হতে হবে)।
+- **`union()`:** শুধুমাত্র ইউনিক ডাটাগুলোকে মার্জ করে।
+- **`unionAll()`:** ডুপ্লিকেট সহ সমস্ত ডাটা মার্জ করে (দ্রুত কাজ করে)।
+
+```php
+$first = DB::table('users')
+    ->whereNull('first_name')
+    ->union(DB::table('users')->whereNull('last_name'))
+    ->get();
+```
+
+---
+
+### ঙ. হোয়্যার ক্লজ ডিপ ডাইভ (Mastering WHERE Clause):
+হোয়্যার ক্লজের মাধ্যমে আমরা কোয়েরির কন্ডিশন নির্ধারণ করি। লারাভেলে বিভিন্ন ধরণের হোয়্যার মেথড রয়েছে:
+
+- **ডিফল্ট ইকুয়াল চেক:** অপারেটর না বলে দিলে বাই-ডিফল্ট `=` কন্ডিশন চেক করবে।
+  ```php
+  $users = DB::table('users')->where('votes', 100)->get();
+  ```
+- **অন্যান্য অপারেটর ব্যবহার:**
+  ```php
+  $users = DB::table('users')
+      ->where('votes', '>=', 100)
+      ->where('votes', '<>', 100) // Not equal check
+      ->where('name', 'like', 'T%') // প্যাটার্ন ম্যাচিং
+      ->get();
+  ```
+- **`whereIn` এবং `whereNotIn`:** অ্যারের ভেতরের ভ্যালু চেক করতে:
+  ```php
+  $users = DB::table('users')
+      ->whereIn('age', [23, 25, 30])
+      ->get();
+  ```
+- **লজিক্যাল AND এবং OR কন্ডিশন গ্রুপ করা:**
+  একাধিক কন্ডিশন মেথড চেইনিং করলে তারা পরস্পর `AND` লজিকে কাজ করে। কিন্তু ব্র্যাকেট বা গ্রুপ কন্ডিশন তৈরি করতে আমরা ক্লোজার ফাংশন ব্যবহার করতে পারি:
+  ```php
+  // SELECT * FROM users WHERE (age = 25 OR salary < 4500) AND (name = 'Komal' OR name = 'Kaushik')
+  $users = DB::table('customers')
+      ->where(function ($query) {
+          $query->where('age', 25)
+                ->orWhere('salary', '<', 4500);
+      })
+      ->where(function ($query) {
+          $query->where('name', 'Komal')
+                ->orWhere('name', 'Kaushik');
+      })
+      ->get();
+  ```

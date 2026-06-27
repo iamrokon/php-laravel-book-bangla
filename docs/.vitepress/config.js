@@ -122,6 +122,7 @@ export default {
                     items: [
                         { text: 'Database Seeding & Multi-DB', link: '/laravel/seeding-and-multi-db' },
                         { text: 'Database Query Builder', link: '/laravel/query-builder' },
+                        { text: 'Eloquent ORM', link: '/laravel/eloquent-orm' },
                     ]
                 },
                 {
@@ -136,7 +137,24 @@ export default {
                     text: 'মডিউল ১০ ও ১১: অথেন্টিকেশন ও মিডলওয়্যার',
                     collapsed: true,
                     items: [
+                        { text: 'Validation in Laravel', link: '/laravel/validation' },
                         { text: 'Authentication Mechanisms', link: '/laravel/authentication' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১০(২): হেল্পার্স ও কালেকশনস',
+                    collapsed: true,
+                    items: [
+                        { text: 'Laravel Helpers', link: '/laravel/helpers' },
+                        { text: 'Laravel Collections', link: '/laravel/collections' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৩: নেমিং কনভেনশন ও ফ্রেমওয়ার্কস',
+                    collapsed: true,
+                    items: [
+                        { text: 'Laravel Naming Conventions', link: '/laravel/naming-conventions' },
+                        { text: 'Tailwind CSS & Alpine.js', link: '/laravel/tailwind-alpine' },
                     ]
                 }
             ],
