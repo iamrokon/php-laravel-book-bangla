@@ -10,7 +10,9 @@
 4. `do...while()`
 
 ### for loop
-নির্দিষ্ট সংখ্যা পর্যন্ত লুপ চালাতে ব্যবহৃত হয়।
+
+`for` Loop ব্যবহার করা হয় যখন আগে থেকেই জানা থাকে লুপটি **কতবার চলবে**। এতে সাধারণত **Initialization, Condition এবং Increment/Decrement** একসাথে লেখা হয়।
+
 ```php
 for ($i = 1; $i <= 5; $i++) {
     echo "Iteration: $i <br>";
@@ -18,7 +20,9 @@ for ($i = 1; $i <= 5; $i++) {
 ```
 
 ### foreach loop
-অ্যারের এলিমেন্টগুলো নিয়ে কাজ করতে এটি সবচেয়ে সুবিধাজনক।
+
+`foreach` Loop মূলত **Array** এবং **Traversable Object**-এর প্রতিটি এলিমেন্টের উপর একবার করে লুপ চালানোর জন্য ব্যবহৃত হয়। অ্যারের প্রতিটি ভ্যালু বা **Key-Value Pair** সহজে অ্যাকসেস করার জন্য এটি সবচেয়ে সুবিধাজনক এবং বেশি ব্যবহৃত Loop।
+
 ```php
 $names = ['Laravel', 'PHP', 'Symfony'];
 foreach ($names as $key => $name) {
