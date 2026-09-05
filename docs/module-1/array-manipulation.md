@@ -62,18 +62,20 @@ print_r(array_values($heroes));
 print_r(array_keys($heroes));
 ```
 
-`array_values()` শুধুমাত্র Values এবং `array_keys()` শুধুমাত্র Keys রিটার্ন করে।
+`array_values()` শুধুমাত্র **Values** এবং `array_keys()` শুধুমাত্র **Keys** রিটার্ন করে।
 
-### array_shift() & array_unshift()
-`array_shift()` অ্যারের শুরু থেকে একটি এলিমেন্ট বাদ দেয় (FIFO - First In First Out)।
+### `array_shift()` & `array_unshift()`
 
-`array_unshift()` লিস্টের শুরুতে নতুন ডাটা যুক্ত করে।
+`array_shift()` অ্যারের **শুরু (Beginning)** থেকে প্রথম Element সরিয়ে দেয় এবং সেই Element-টি রিটার্ন করে। এটি **FIFO (First In, First Out)** নীতি অনুসরণ করে।
 
-এগুলো অ্যারের **শুরুর (Beginning)** অংশ নিয়ে কাজ করার জন্য ব্যবহৃত হয়।
+অন্যদিকে, `array_unshift()` অ্যারের **শুরুতে** নতুন Element বা একাধিক Value যুক্ত করে।
 
-### array_pop() & array_push()
-`array_pop()` অ্যারের শেষ থেকে ডাটা তুলে আনে।
+অর্থাৎ, এই দুটি Function অ্যারের **শুরুর (Beginning)** অংশ নিয়ে কাজ করে।
 
-`array_push()` অ্যারের শেষে ডাটা যুক্ত করে।
+### `array_pop()` & `array_push()`
 
-এগুলো অ্যারের **শেষ (End)** অংশ নিয়ে কাজ করার জন্য ব্যবহৃত হয় এবং `array_pop()` **LIFO (Last In First Out)** নীতি অনুসরণ করে।
+`array_pop()` অ্যারের **শেষ (End)** থেকে একটি Element সরিয়ে দেয় এবং সেই Element-টি রিটার্ন করে।
+
+`array_push()` অ্যারের **শেষে** নতুন Element বা একাধিক Value যুক্ত করে।
+
+এই দুটি Function অ্যারের **শেষ (End)** অংশ নিয়ে কাজ করে। `array_pop()` **LIFO (Last In, First Out)** নীতি অনুসরণ করে।

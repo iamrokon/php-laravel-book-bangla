@@ -17,24 +17,39 @@ print_r($updatedYears);
 
 ### Local Variable in Closures
 
-Closure বা Anonymous Function-এর নিজস্ব **Local Scope** থাকে। তাই গ্লোবাল স্কোপে থাকা কোনো ভেরিয়েবলকে ক্লোজারের ভেতর ব্যবহার করতে চাইলে `use` কিওয়ার্ডের মাধ্যমে সেটি ইমপোর্ট করতে হয়।
+Closure বা Anonymous Function-এর নিজস্ব **Local Scope** থাকে। তাই বাইরের (Outer Scope) কোনো Variable-কে Closure-এর ভেতরে সরাসরি ব্যবহার করা যায় না।
+
+বাইরের Variable ব্যবহার করতে চাইলে `use` Keyword-এর মাধ্যমে সেই Variable-কে Closure-এর মধ্যে **Import** করতে হয়।
 
 ```php
 $username = "Al Nahian";
+
 $greetings = ["Hello", "👋"];
 
 $formatted = array_map(function($greeting) use ($username) {
+
     return "$greeting, $username!";
+
 }, $greetings);
 ```
 
+এখানে `$username` বাইরের Scope-এ রয়েছে। `use ($username)` ব্যবহার করার মাধ্যমে এটিকে Closure-এর মধ্যে ব্যবহার করার জন্য Import করা হয়েছে।
+
 ### Arrow Functions
 
-**Arrow Function** হলো PHP 7.4-এ যুক্ত হওয়া একটি সংক্ষিপ্ত (Short Syntax) Anonymous Function। ছোট ও এক লাইনের এক্সপ্রেশন লেখার জন্য এটি ব্যবহৃত হয়।
+**Arrow Function** হলো PHP 7.4-এ যুক্ত হওয়া একটি সংক্ষিপ্ত (Short Syntax) Anonymous Function। ছোট এবং সাধারণ Expression-এর ক্ষেত্রে কম কোডে Function লেখার জন্য এটি ব্যবহার করা হয়।
 
-Arrow Function (`fn`) ব্যবহার করলে `use` কিওয়ার্ড ছাড়াই বাইরের (Outer Scope) ভেরিয়েবল স্বয়ংক্রিয়ভাবে access করা যায়।
+Arrow Function-এ `fn` Keyword ব্যবহার করা হয় এবং সাধারণত একটি মাত্র Expression থাকে, যার Value **স্বয়ংক্রিয়ভাবে Return** হয়।
+
+সবচেয়ে গুরুত্বপূর্ণ বিষয় হলো, Arrow Function-এর ক্ষেত্রে `use` Keyword লেখার প্রয়োজন হয় না। বাইরের (Outer Scope) Variable-গুলো **স্বয়ংক্রিয়ভাবে Access** করা যায়।
 
 ```php
-$formatted = array_map(fn($greeting) => "$greeting, $username!", $greetings);
+$formatted = array_map(
+    fn($greeting) => "$greeting, $username!",
+    $greetings
+);
 ```
-Array ফাংশন সরাসরি ভ্যালু রিটার্ন করে।
+
+এখানে `$username` বাইরের Scope থেকে সরাসরি Access করা হয়েছে এবং `fn` ব্যবহার করার কারণে `use ($username)` লেখার প্রয়োজন হয়নি।
+
+> **Note:** Closure-এ বাইরের Variable ব্যবহার করতে সাধারণত `use` Keyword লাগে, কিন্তু Arrow Function-এ Outer Scope-এর Variable স্বয়ংক্রিয়ভাবে Access করা যায়।
