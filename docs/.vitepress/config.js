@@ -156,6 +156,13 @@ export default {
                         { text: 'Laravel Naming Conventions', link: '/laravel/naming-conventions' },
                         { text: 'Tailwind CSS & Alpine.js', link: '/laravel/tailwind-alpine' },
                     ]
+                },
+                {
+                    text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
+                    collapsed: false,
+                    items: [
+                        { text: 'PHP & Laravel Interview Q&A', link: '/laravel/interview-questions' },
+                    ]
                 }
             ],
 
