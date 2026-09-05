@@ -1,52 +1,58 @@
 # Episode 8: Built-in Functions
 
 > [!IMPORTANT]
-> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** পিএইচপিতে বিল্ট-ইন ফাংশন কি এবং গুরুত্বপূর্ণ কয়েকটি বিল্ট-ইন ফাংশনের ব্যবহার উদাহরণসহ লিখ
 
-**Built-in Functions** হলো PHP-এর পূর্বনির্ধারিত (Predefined) ফাংশন, যা PHP নিজেই প্রদান করে। এগুলোর মাধ্যমে বিভিন্ন সাধারণ কাজ সহজ ও দ্রুত করা যায়।
+> **★ ইন্টারভিউয়ের জন্য গুরুত্বপূর্ণ প্রশ্ন:** পিএইচপিতে Built-in Function কী এবং গুরুত্বপূর্ণ কয়েকটি Built-in Function-এর ব্যবহার উদাহরণসহ লিখ।
+
+**Built-in Functions** হলো PHP-এর পূর্বনির্ধারিত (Predefined) Function, যেগুলো PHP নিজেই প্রদান করে। এগুলোর মাধ্যমে বিভিন্ন সাধারণ ও প্রয়োজনীয় কাজ কম কোডে, সহজে এবং দ্রুত সম্পন্ন করা যায়।
 
 ### String Functions
 
-স্ট্রিং নিয়ে বিভিন্ন ধরনের অপারেশন করার জন্য PHP-তে অনেক Built-in Functions রয়েছে।
+String নিয়ে বিভিন্ন ধরনের অপারেশন করার জন্য PHP-তে অনেক Built-in Function রয়েছে।
 
-- `strlen()` → স্ট্রিং-এর মোট **Character** সংখ্যা গণনা করে।
-- `ucfirst()` → স্ট্রিং-এর **প্রথম অক্ষর** বড় হাতের (Uppercase) করে।
-- `lcfirst()` → স্ট্রিং-এর **প্রথম অক্ষর** ছোট হাতের (Lowercase) করে।
-- `strtolower()` → স্ট্রিং-এর **সব অক্ষর** ছোট হাতের (Lowercase) করে।
-- `strtoupper()` → স্ট্রিং-এর **সব অক্ষর** বড় হাতের (Uppercase) করে।
-- `ucwords()` → স্ট্রিং-এর **প্রতিটি শব্দের প্রথম অক্ষর** বড় হাতের করে।
-- `str_word_count()` → স্ট্রিং-এ মোট **কতটি শব্দ** রয়েছে তা গণনা করে।
+* `strlen()` → একটি String-এর মোট **Character** সংখ্যা গণনা করে।
+* `ucfirst()` → String-এর **প্রথম অক্ষর** বড় হাতের (Uppercase) করে।
+* `lcfirst()` → String-এর **প্রথম অক্ষর** ছোট হাতের (Lowercase) করে।
+* `strtolower()` → String-এর **সব অক্ষর** ছোট হাতের (Lowercase) করে।
+* `strtoupper()` → String-এর **সব অক্ষর** বড় হাতের (Uppercase) করে।
+* `ucwords()` → String-এর **প্রতিটি শব্দের প্রথম অক্ষর** বড় হাতের করে।
+* `str_word_count()` → একটি String-এ মোট **কতটি শব্দ** রয়েছে তা গণনা করে।
 
-### explode() & implode()
+### `explode()` & `implode()`
 
-`explode()` একটি স্ট্রিংকে নির্দিষ্ট Delimiter অনুযায়ী ভাগ করে অ্যারে তৈরি করে।
+`explode()` একটি String-কে নির্দিষ্ট **Delimiter** অনুযায়ী ভাগ করে একটি Array তৈরি করে।
 
-`implode()` বা `join()` একটি অ্যারের এলিমেন্টগুলোকে একত্র করে স্ট্রিং তৈরি করে।
+`implode()` বা `join()` একটি Array-এর Elementগুলোকে নির্দিষ্ট Separator দিয়ে একত্র করে একটি String তৈরি করে।
 
 ```php
 $tags = "JS, PHP, Laravel";
+
 $tagArray = explode(", ", $tags);
 
-echo join(" | ", $tagArray); // JS | PHP | Laravel
+echo implode(" | ", $tagArray);
+// JS | PHP | Laravel
 ```
 
 ### Number Functions
 
-`number_format()` নাম্বারকে নির্দিষ্ট ফরম্যাটে (যেমন কমা সেপারেটেড) দেখাতে ব্যবহৃত হয়।
+`number_format()` কোনো Number-কে নির্দিষ্ট Format-এ প্রদর্শন করতে ব্যবহৃত হয়। যেমন—Decimal সংখ্যা এবং হাজারের Separator (Comma) ব্যবহার করে Number-কে সুন্দরভাবে দেখানো।
 
 ```php
-echo number_format(5306000, 2, ".", ","); // 5,306,000.00
+echo number_format(5306000, 2, ".", ",");
+// 5,306,000.00
 ```
 
 ### Date & Time
 
-- `date()` → বর্তমান তারিখ বা সময় নির্দিষ্ট ফরম্যাটে দেখায়।
-- `time()` → ১৯৭০ সালের ১ জানুয়ারি থেকে এখন পর্যন্ত মোট সেকেন্ড (Unix Timestamp)।
+* `date()` → নির্দিষ্ট Format অনুযায়ী **তারিখ ও সময়** প্রদর্শন করে।
+* `time()` → **১ জানুয়ারি ১৯৭০ (Unix Epoch)** থেকে বর্তমান সময় পর্যন্ত মোট সেকেন্ডের সংখ্যা অর্থাৎ **Unix Timestamp** রিটার্ন করে।
 
 ### File Functions
 
-- `file_get_contents()` → ফাইলের কন্টেন্ট পড়ে।
-- `unlink()` → ফাইল ডিলিট করে।
-- `file_exists()` → ফাইল আছে কিনা যাচাই করে।
+PHP-তে File তৈরি, পড়া, যাচাই এবং ডিলিট করার জন্য বিভিন্ন Built-in Function রয়েছে।
 
-> **💡 Interview Tip:** Built-in Functions ব্যবহার করলে কম কোড লিখে দ্রুত ও Efficientভাবে কাজ করা যায়।
+* `file_get_contents()` → একটি ফাইলের **সম্পূর্ণ Content পড়ে** String হিসেবে রিটার্ন করে।
+* `unlink()` → নির্দিষ্ট **File ডিলিট** করে।
+* `file_exists()` → নির্দিষ্ট **File বা Directory আছে কিনা** যাচাই করে এবং `true` বা `false` রিটার্ন করে।
+
+> **💡 Interview Tip:** Built-in Functions ব্যবহার করলে কম কোড লিখে সাধারণ কাজগুলো দ্রুত, সহজ এবং Efficientভাবে সম্পন্ন করা যায়। ইন্টারভিউতে Function-এর নামের পাশাপাশি **কী কাজ করে এবং কোথায় ব্যবহার করা হয়**—এটিও জানা গুরুত্বপূর্ণ।
