@@ -95,6 +95,14 @@ export default {
                                 { text: 'PHP Problem Solving & DSA', link: '/dsa/problem-solving' },
                                 { text: 'PHP CLI & Internal Flow', link: '/extra/php-cli' },
                             ]
+                        },
+                        {
+                            text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
+                            collapsed: false,
+                            items: [
+                                { text: 'PHP & OOP Interview QA', link: '/extra/php-oop-interview' },
+                                { text: 'Database & SQL Interview QA', link: '/extra/database-interview' },
+                            ]
                         }
                     ]
                 ])
@@ -161,7 +169,8 @@ export default {
                     text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
                     collapsed: false,
                     items: [
-                        { text: 'PHP & Laravel Interview Q&A', link: '/laravel/interview-questions' },
+                        { text: 'Laravel & Architecture Interview QA', link: '/laravel/interview-questions' },
+                        { text: 'Database & SQL Interview QA', link: '/extra/database-interview' },
                     ]
                 }
             ],
@@ -261,6 +270,14 @@ export default {
                         { text: '৯. হায়ার অর্ডার কম্পোনেন্ট (HOC)', link: '/react/higher-order-components' },
                         { text: '১০. রিঅ্যাক্ট কনটেক্সট এপিআই (Context API)', link: '/react/context-api' },
                         { text: '১১. রিঅ্যাক্ট হুকস, useReducer ও Custom Hook', link: '/react/react-hooks' },
+                    ]
+                },
+                {
+                    text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
+                    collapsed: false,
+                    items: [
+                        { text: 'React.js Interview Q&A (Basic to Advanced)', link: '/react/interview-questions' },
+                        { text: 'JS, Node.js & NestJS Interview QA', link: '/extra/js-node-interview' },
                     ]
                 }
             ],
