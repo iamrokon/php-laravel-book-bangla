@@ -147,6 +147,10 @@ export default {
                     items: [
                         { text: 'Validation in Laravel', link: '/laravel/validation' },
                         { text: 'Authentication Mechanisms', link: '/laravel/authentication' },
+                        { text: 'Episode 1: PSR & Coding Conventions', link: '/module%2011/Episode%201%20%20Practices%20and%20recommendations%20PSR%20and%20Coding%20Conventions' },
+                        { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
+                        { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
+                        { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
                     ]
                 },
                 {
@@ -171,6 +175,19 @@ export default {
                     items: [
                         { text: 'Laravel & Architecture Interview QA', link: '/laravel/interview-questions' },
                         { text: 'Database & SQL Interview QA', link: '/extra/database-interview' },
+                    ]
+                }
+            ],
+
+            '/module%2011/': [
+                {
+                    text: 'মডিউল ১১: অথেন্টিকেশন ও সিকিউরিটি',
+                    collapsed: false,
+                    items: [
+                        { text: 'Episode 1: PSR & Coding Conventions', link: '/module%2011/Episode%201%20%20Practices%20and%20recommendations%20PSR%20and%20Coding%20Conventions' },
+                        { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
+                        { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
+                        { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
                     ]
                 }
             ],

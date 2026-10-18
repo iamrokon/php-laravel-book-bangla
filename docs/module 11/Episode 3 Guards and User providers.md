@@ -1,203 +1,502 @@
-Module 11 : Episode 3 : Guards and User providers
+# Module 11 (3): Episode 3 — Guards and User Providers
 
-config/auth.php ফাইলে অথেনটিকেশন রিলেটেড কনফিগারেশন থাকে।
+## ১. Authentication Configuration
 
-return [
-    'defaults' => [
-        'guard' => 'web',
-        'passwords' => 'users',
+Laravel-এর `config/auth.php` ফাইলে Authentication-সম্পর্কিত configuration থাকে। এখানে Guard, User Provider এবং Password Reset-এর configuration নির্ধারণ করা হয়।
+
+উদাহরণ:
+
+```php
+'defaults' => [
+    'guard' => 'web',
+    'passwords' => 'users',
+],
+
+'guards' => [
+    'web' => [
+        'driver' => 'session',
+        'provider' => 'users',
     ],
+],
+```
 
-    'guards' => [
-        'web' => [
-            'driver' => 'session',
-            'provider' => 'users',
-        ],
-    ],
-];
+এখানে:
 
-এই 'web' guard মূলত ইউজারদের অথেনটিকেশন লজিক হ্যান্ডেল করে।
+- `defaults` — ডিফল্ট Guard ও Password Broker নির্ধারণ করে।
+- `web` — একটি Guard-এর নাম।
+- `driver` — Authentication কীভাবে পরিচালিত হবে, তা নির্ধারণ করে।
+- `session` — Session-based Authentication-এর জন্য ব্যবহৃত হয়।
+- `provider` — কোন উৎস থেকে User-এর তথ্য পাওয়া যাবে, তা নির্ধারণ করে।
+- `users` — `config/auth.php`-এ সংজ্ঞায়িত একটি User Provider-এর নাম।
 
-vendor/laravel/framework/src/Illuminate/Auth/AuthManager.php
-public function createSessionDriver($name, $config) {
-    // ইউজারদের জন্য সেশন ড্রাইভার তৈরি করে কিভাবে ইউজারকে রেজিস্ট্রেসন করা যাবে সেটার লজিক এখানে থাকে।
+## ২. Laravel-এর Session Guard
+
+Laravel-এর Authentication Manager বিভিন্ন ধরনের Guard তৈরি ও পরিচালনা করে।
+
+ফাইলের অবস্থান:
+
+`vendor/laravel/framework/src/Illuminate/Auth/AuthManager.php`
+
+Session Guard তৈরি করার ধারণাগত উদাহরণ:
+
+```php
+public function createSessionDriver($name, $config)
+{
+    // Guard-এর configuration অনুযায়ী
+    // User Provider তৈরি করা হয়।
+
+    $provider = $this->createUserProvider(
+        $config['provider'] ?? null
+    );
+
     $guard = new SessionGuard(
         $name,
         $provider,
         $this->app['session.store']
     );
+
+    return $guard;
 }
+```
 
+**নোট:** এটি বোঝানোর জন্য একটি সরলীকৃত উদাহরণ। Laravel-এর প্রকৃত source code version অনুযায়ী আলাদা হতে পারে।
 
-সেশন বেজড অথেনটিকেশনের পুরা সিস্টেম Session Guard এর
-ধাপ ১
-... src\Illuminate\Auth\SessionGuard.php
+Session-based Authentication-এর মূল কাজগুলো `SessionGuard` class পরিচালনা করে।
 
-আমরা চাইলে নিজেরই guard তৈরি করতে পারি।
+ফাইলের অবস্থান:
+
+`vendor/laravel/framework/src/Illuminate/Auth/SessionGuard.php`
+
+## ৩. Custom Guard তৈরি করা
+
+Laravel-এ প্রয়োজন অনুযায়ী Custom Guard তৈরি করা যায়। উদাহরণস্বরূপ, আমরা JWT ব্যবহার করে Authentication পরিচালনা করতে চাইলে একটি Custom Guard তৈরি করতে পারি।
+
+`app/Providers/AppServiceProvider.php` ফাইলে:
+
+```php
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\ServiceProvider;
+use Illuminate\Contracts\Foundation\Application;
+
 class AppServiceProvider extends ServiceProvider
 {
-    public function boot()
+    public function boot(): void
     {
-        Auth::extend('jwt', function (Application $app,
-            string $name, array $config) {
-            return new JwtGuard(Auth::createUserProvider(
-                $config['provider']));
-        });
+        Auth::extend(
+            'jwt',
+            function (
+                Application $app,
+                string $name,
+                array $config
+            ) {
+                $provider = Auth::createUserProvider(
+                    $config['provider'] ?? null
+                );
+
+                return new JwtGuard($provider);
+            }
+        );
     }
 }
+```
 
-আমরা তৈরিকৃত Guard ক্লাসটি Illuminate\Contracts\
-Auth\Guard কে ইমপ্লিমেন্ট করবে।
+এখানে `JwtGuard` একটি উদাহরণস্বরূপ Custom class। এটি আমাদের তৈরি করতে হবে এবং প্রয়োজনীয় Authentication logic implement করতে হবে।
 
-এই ড্রাইভারটি এখন auth.php তে দিয়ে দিব।
-auth.php
+Custom Guard-কে `Illuminate\Contracts\Auth\Guard` interface implement করতে হবে। Remember-me functionality প্রয়োজন হলে `Illuminate\Contracts\Auth\StatefulGuard`-ও প্রাসঙ্গিক হতে পারে।
+
+### ৩.১. Custom Guard Configuration
+
+`config/auth.php` ফাইলে:
+
+```php
 'guards' => [
     'api' => [
         'driver' => 'jwt',
         'provider' => 'users',
     ],
-]
+],
+```
 
-আমরা আলাদা guard ক্লাস না বানিয়ে Closure দিয়েও এটা
-করতে পারি।
+এখানে `jwt` হলো Custom Guard-এর driver name। `Auth::extend()`-এর মাধ্যমে এই driver register করা হয়েছে।
 
-public function boot()
+## ৪. Closure ব্যবহার করে Custom Request Guard
+
+সব সময় আলাদা Guard class তৈরি করার প্রয়োজন হয় না। সাধারণ token-based Authentication-এর জন্য `Auth::viaRequest()` ব্যবহার করে একটি Request Guard তৈরি করা যায়।
+
+`AppServiceProvider.php` ফাইলে:
+
+```php
+use App\Models\User;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+public function boot(): void
 {
-    Auth::viaRequest('custom-token', function (Request $request) {
-        return User::where('token', (string) $request->token)
-            ->first();
-    });
-}
+    Auth::viaRequest(
+        'custom-token',
+        function (Request $request) {
+            $token = $request->bearerToken();
 
-auth.php
+            if (! $token) {
+                return null;
+            }
+
+            return User::where('token', $token)->first();
+        }
+    );
+}
+```
+
+এখানে `bearerToken()` Request-এর Authorization header থেকে Bearer token সংগ্রহ করে।
+
+**গুরুত্বপূর্ণ:** এটি শেখার জন্য একটি সরলীকৃত উদাহরণ। বাস্তব প্রজেক্টে plain-text token সংরক্ষণ না করে নিরাপদ token verification এবং token expiry-এর ব্যবস্থা করতে হবে।
+
+### ৪.১. Request Guard Configuration
+
+`config/auth.php` ফাইলে:
+
+```php
 'guards' => [
     'api' => [
         'driver' => 'custom-token',
     ],
 ],
+```
 
-আমরা চাইলে provider-ও তৈরি করতে পারি।
-class AppServiceProvider extends ServiceProvider
+এখানে `custom-token` হলো `Auth::viaRequest()`-এ register করা driver-এর নাম।
+
+## ৫. Custom User Provider
+
+Laravel-এ User Provider-এর কাজ হলো Authentication-এর জন্য User-এর তথ্য সংগ্রহ করা। সাধারণত এটি Database বা অন্য কোনো data source থেকে User-এর তথ্য নিয়ে আসে।
+
+আমরা চাইলে Custom User Provider তৈরি করতে পারি। উদাহরণস্বরূপ, MongoDB থেকে User-এর তথ্য সংগ্রহ করার জন্য একটি Custom Provider তৈরি করা যেতে পারে।
+
+`AppServiceProvider.php` ফাইলে:
+
+```php
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Contracts\Foundation\Application;
+
+public function boot(): void
 {
-    public function boot()
-    {
-        Auth::provider('mongo', function (Application $app, array $config) {
-            return new MongoUserProvider($app->make('mongo')->connection());
-        });
-    }
+    Auth::provider(
+        'mongo',
+        function (Application $app, array $config) {
+            return new MongoUserProvider(
+                $app->make('mongo')->connection()
+            );
+        }
+    );
 }
+```
 
+এখানে `MongoUserProvider` একটি Custom class, যা আমাদের তৈরি করতে হবে।
+
+### ৫.১. User Provider Configuration
+
+`config/auth.php` ফাইলে:
+
+```php
 'providers' => [
     'users' => [
-    ]
+        'driver' => 'eloquent',
+        'model' => App\Models\User::class,
+    ],
+
+    'mongo_users' => [
+        'driver' => 'mongo',
+    ],
 ],
+```
 
-কাস্টম User প্রোভাইডার বানাতে আমাদেরক Illuminate\Contracts\
-Auth\UserProvider ইন্টারফেসকে ইমপ্লিমেন্ট করতে হবে এবং
-আমাদেরকে বলে দিতে হবে যে, ডাটাবেস থেকে Id কিভাবে নেবে,
-Token কেন, Remember টোকেন কে কিভাবে হ্যান্ডেল
-করব ...
+এখানে `mongo` driver-টি `Auth::provider()` দিয়ে register করা হয়েছে।
 
+### ৫.২. UserProvider Interface
+
+Custom User Provider তৈরি করতে `Illuminate\Contracts\Auth\UserProvider` interface implement করতে হয়।
+
+এর গুরুত্বপূর্ণ method-গুলো হলো:
+
+- `retrieveById()` — User-এর identifier দিয়ে User খুঁজে বের করে।
+- `retrieveByToken()` — Remember token দিয়ে User খুঁজে বের করে।
+- `updateRememberToken()` — User-এর Remember token আপডেট করে।
+- `retrieveByCredentials()` — Login credentials অনুযায়ী User খুঁজে বের করে।
+- `validateCredentials()` — প্রদত্ত credentials যাচাই করে।
+- `rehashPasswordIfRequired()` — প্রয়োজন হলে password hash পুনরায় তৈরি করে।
+
+Interface-এর ধারণাগত উদাহরণ:
+
+```php
 namespace Illuminate\Contracts\Auth;
+
 interface UserProvider
 {
     public function retrieveById($identifier);
-    public function retrieveByToken($identifier, $token);
-}
 
-আমরা যদি কোন guard বানাই সেটা ব্যবহার করব
-নিচের উপায়ে (উপরে বানানো web-admin গার্ড middleware হিসেবে):
+    public function retrieveByToken(
+        $identifier,
+        $token
+    );
+
+    public function updateRememberToken(
+        Authenticatable $user,
+        $token
+    );
+
+    public function retrieveByCredentials(
+        array $credentials
+    );
+
+    public function validateCredentials(
+        Authenticatable $user,
+        array $credentials
+    );
+}
+```
+
+**নোট:** এটি মূল interface-এর সম্পূর্ণ সংজ্ঞা নয়। Laravel-এর সংস্করণ অনুযায়ী প্রয়োজনীয় method-এ পার্থক্য থাকতে পারে।
+
+## ৬. Guard এবং Middleware ব্যবহার
+
+কোনো Route-এ নির্দিষ্ট Guard ব্যবহার করতে চাইলে `auth` middleware-এর সঙ্গে Guard-এর নাম দেওয়া যায়।
+
+```php
 Route::get('/flights', function () {
-    //
+    return 'Flights page';
 })->middleware('auth:web-admin');
+```
 
-আমাদের অথেন্টিকেশন সেশন বেসড, নাকি টোকেন বেসড নাকি
-Api অথেন্টিকেশন সেটা হ্যান্ডেল হয় Guard দিয়ে। আবার Guard
-ব্যবহার করে UserProvider কে। কোন ইউজারের কাছ থেকে পাওয়া
-টোকেন চেক করা হয় UserProvider দিয়ে।
+এখানে `web-admin` নামে একটি Guard আগে `config/auth.php` ফাইলে configure করা থাকতে হবে।
 
-Module 11(2) - Episode 3 Best practices - Laravel Pint 101
-লারভেল Pint হল PHPCSfiner এর বিকল্প ব্যাপার।
-এটা দিয়ে সহজেই কোড স্ট্যান্ডার্ড ঠিক করা যায়।
-লারভেল ও তার আগের ভার্সনে Pint ব্যবহার করতে হলে ইন্সটল
-করে নিতে হবে: composer require laravel/pint --dev ওই
-pint শুধু dev ভার্সনেই ব্যবহৃত হয়।
-কোন কাজ নেই, এই কমান্ড রান করে vendor ডিরেক্টরির
-./vendor/bin/pint এই কমান্ডটি স্টাইল্ড ঠিক করে দেবে।
-ব্যাস সব ঠিকঠাক।
+## ৭. Guard এবং User Provider-এর মধ্যে পার্থক্য
 
+**Guard:** User কীভাবে Authentication সম্পন্ন করবে, তা পরিচালনা করে। যেমন Session-based বা Token-based Authentication।
 
+**User Provider:** Authentication-এর জন্য User-এর তথ্য কোথা থেকে সংগ্রহ করা হবে এবং credentials কীভাবে যাচাই করা হবে, তা পরিচালনা করে।
 
+সহজভাবে:
 
+- Guard নির্ধারণ করে Authentication কীভাবে হবে।
+- User Provider নির্ধারণ করে User-এর তথ্য কীভাবে পাওয়া ও যাচাই করা হবে।
 
-৪০। কোডের কমান্ড রান করার আগে ./vendor/bin/pint --test কমান্ড রান করলে আমরা দেখতে পাব কোন ফাইলে কোন কোন ইস্যু আছে।
+---
 
-** যদি আমরা চাই যে আমরা নিজেদের মত করে কাস্টমাইজ করে নিতে পারি।
+# Module 11 (2): Episode 3 — Best Practices: Laravel Pint 101
 
+## ১. Laravel Pint কী?
+
+Laravel Pint হলো PHP কোডের Coding Style ঠিক করার একটি Code Formatter। এটি PHP-CS-Fixer-এর ওপর ভিত্তি করে তৈরি।
+
+Pint ব্যবহার করে কোডের formatting, indentation, spacing এবং অন্যান্য coding style স্বয়ংক্রিয়ভাবে ঠিক করা যায়।
+
+## ২. Laravel Pint ইনস্টলেশন
+
+Laravel-এর যেসব প্রজেক্টে Pint আগে থেকে ইনস্টল করা নেই, সেখানে নিচের কমান্ড ব্যবহার করা যায়:
+
+```bash
+composer require laravel/pint --dev
+```
+
+এখানে `--dev` ব্যবহার করা হয়েছে, কারণ Pint সাধারণত development-এর সময় ব্যবহৃত হয়।
+
+## ৩. Laravel Pint চালানো
+
+প্রজেক্টের root directory থেকে নিচের কমান্ড চালাতে হবে:
+
+```bash
+./vendor/bin/pint
+```
+
+Windows PowerShell-এ সাধারণত এভাবে চালানো যায়:
+
+```powershell
+vendor/bin/pint
+```
+
+এটি প্রজেক্টের PHP ফাইলগুলোর coding style পরীক্ষা করে প্রয়োজনীয় formatting পরিবর্তন করবে।
+
+## ৪. Pint-এর মাধ্যমে সমস্যা পরীক্ষা করা
+
+কোনো ফাইলে পরিবর্তন করার আগে কোন কোন ফাইলে formatting issue আছে তা দেখতে নিচের কমান্ড ব্যবহার করা যায়:
+
+```bash
+./vendor/bin/pint --test
+```
+
+Windows PowerShell:
+
+```powershell
+vendor/bin/pint --test
+```
+
+এই কমান্ড শুধু issue পরীক্ষা করবে; কোড পরিবর্তন করবে না।
+
+## ৫. Pint-এর Preset ব্যবহার
+
+Pint বিভিন্ন coding style preset সমর্থন করে। যেমন:
+
+- `laravel`
+- `psr12`
+- `symfony`
+
+কোনো preset ব্যবহার করতে প্রজেক্টের root directory-তে `pint.json` ফাইল তৈরি করা যায়।
+
+### PSR-12 Preset
+
+```json
 {
-"preset": "symfony" -> symfony ফ্রেমওয়ার্কের কোডিং স্ট্যান্ডার্ড ব্যবহার করে কিছু ফিক্স করবে।
-"preset": "psr12" -> psr12 এর কোডিং স্ট্যান্ডার্ড ব্যবহার করে কিছু ফিক্স করবে।
-
-← করে কিছু ফিক্স করবে।
-← কাস্টম রুল ব্যবহার করে স্ট্যান্ডার্ড ফিক্স করবে
-"rule": {
-"binary-operator-spaces": {
-"default": "align_single_space_minimal"
+    "preset": "psr12"
 }
+```
+
+### Symfony Preset
+
+```json
+{
+    "preset": "symfony"
 }
+```
+
+এই configuration অনুযায়ী Pint সংশ্লিষ্ট coding style অনুসরণ করবে।
+
+## ৬. Custom Rules ব্যবহার
+
+আমরা চাইলে `pint.json` ফাইলে custom rule-ও নির্ধারণ করতে পারি।
+
+```json
+{
+    "preset": "laravel",
+    "rules": {
+        "binary_operator_spaces": {
+            "default": "single_space"
+        }
+    }
 }
+```
 
-আমরা চাইলে নির্দিষ্ট কোন ফাইল বা ফোল্ডারকে pint দিয়ে ফিক্স করতে পারি।
-./vendor/bin/pint app/ -> app ডিরেক্টরির সকল ফাইলের স্ট্যান্ডার্ড ফিক্স করবে।
+এখানে binary operator-এর আশপাশে একটি space রাখার নিয়ম নির্ধারণ করা হয়েছে। Pint-এর configuration-এ rule-এর নাম ও value সমর্থিত হতে হবে।
 
+## ৭. নির্দিষ্ট File বা Directory-তে Pint চালানো
 
+শুধু `app` directory-এর ফাইলগুলো format করতে:
 
-আমরা চাইলে নির্দিষ্ট কোন ফাইল বা ফোল্ডার বাদ রেখে
-বাকিগুলোর উপরে pint কমান্ড অ্যাপ্লাই করতে পারি।
+```bash
+./vendor/bin/pint app/
+```
 
-"pint": {"exclude": ["my-specific/folder"]} ডিরেক্টরির বাদে
-বাকিগুলোকে pint কমান্ড রান করা শিখব।
+নির্দিষ্ট একটি ফাইল format করতে:
 
-composer.json
-"scripts": {
-"pint": "./vendor/bin/pint"
+```bash
+./vendor/bin/pint app/Models/User.php
+```
+
+Windows PowerShell-এও একই path ব্যবহার করা যায়:
+
+```powershell
+vendor/bin/pint app/Models/User.php
+```
+
+## ৮. নির্দিষ্ট Directory বাদ দেওয়া
+
+কোনো নির্দিষ্ট directory-কে formatting থেকে বাদ দিতে চাইলে `pint.json` ফাইলে `exclude` configuration ব্যবহার করা যায়।
+
+```json
+{
+    "preset": "laravel",
+    "exclude": [
+        "my-specific/folder"
+    ]
 }
+```
 
-এবার আমরা composer pint এই কমান্ডের মাধ্যমে pint কে
-রান করতে পারব।
+এখানে `my-specific/folder` directory-টি Pint-এর formatting থেকে বাদ দেওয়ার জন্য নির্দিষ্ট করা হয়েছে।
 
-Module 11(2) : Episode 4: Best practices: The art of
-semantic versioning
+## ৯. Composer Script দিয়ে Pint চালানো
 
-প্রতিটি লাইব্রেরি, প্যাকেজ বা সফটওয়্যারের ভার্সন
-নাম্বার থাকে। যেমন: ১.৫.২
-Major -> Minor -> PATCH
-বড় পরিবর্তন
+`composer.json` ফাইলের `scripts` অংশে Pint-এর command যোগ করা যায়।
 
+```json
+{
+    "scripts": {
+        "pint": "@php vendor/bin/pint"
+    }
+}
+```
 
-1. MAJOR VERSION
-1. Major version (MAJOR) indicates breaking changes.
-2. It represents significant software modifications.
-3. Major version updates can break compatibility.
-4. It requires careful consideration when upgrading.
-5. Major version changes imply substantial alterations.
+এরপর Pint চালাতে:
 
-• 5. MINOR VERSION
-1. Minor version (MINOR) implies new features or enhancements.
-2. It doesn't break existing functionality.
-3. Minor updates offer added capabilities.
-4. Safe to upgrade without major compatibility concerns.
-5. Minor version changes signify incremental improvements.
+```bash
+composer pint
+```
 
+এতে সরাসরি `vendor/bin/pint` path না লিখেও Composer-এর মাধ্যমে Pint চালানো যাবে।
 
+---
 
+# Module 11 (2): Episode 4 — Best Practices: The Art of Semantic Versioning
 
+## ১. Semantic Versioning কী?
 
-1. Patch version (PATCH) signifies bug fixes and minor improvements.
-2. It maintains backward compatibility with the current minor and major versions.
-3. Patch updates address issues and increase stability.
-4. Safe to upgrade without concerns about breaking changes.
-5. Patch version changes indicate minor, non-disruptive adjustments.
+প্রতিটি Software, Library বা Package-এর একটি Version Number থাকে। Semantic Versioning বা SemVer হলো software-এর version number নির্ধারণের একটি নিয়ম।
 
-Patch ভার্সন 0 থেকে শুরু হয়।
-Semantic Versioning এর ওয়েবসাইট: semver.org
+উদাহরণ:
+
+`1.5.2`
+
+Semantic Versioning-এর সাধারণ Format:
+
+`MAJOR.MINOR.PATCH`
+
+এখানে:
+
+- `MAJOR` — Breaking changes
+- `MINOR` — নতুন feature বা functionality
+- `PATCH` — Bug fixes ও ছোটখাটো সংশোধন
+
+## ২. Major Version
+
+Major version-এ এমন পরিবর্তন করা হয়, যা আগের version-এর সঙ্গে backward compatibility ভেঙে দিতে পারে।
+
+উদাহরণ:
+
+`1.5.2` → `2.0.0`
+
+Major version পরিবর্তনের বৈশিষ্ট্য:
+
+1. Breaking changes থাকতে পারে।
+2. API বা function-এর ব্যবহার পরিবর্তিত হতে পারে।
+3. পুরোনো কোড নতুন version-এ কাজ নাও করতে পারে।
+4. Upgrade করার আগে compatibility যাচাই করা উচিত।
+5. Migration বা code modification প্রয়োজন হতে পারে।
+
+## ৩. Minor Version
+
+Minor version-এ সাধারণত নতুন feature বা functionality যোগ করা হয়, তবে বিদ্যমান public API-এর backward compatibility বজায় রাখা হয়।
+
+উদাহরণ:
+
+`1.5.2` → `1.6.0`
+
+Minor version-এর বৈশিষ্ট্য:
+
+1. নতুন feature যোগ করা হয়।
+2. বিদ্যমান functionality বজায় রাখা হয়।
+3. নতুন capability যুক্ত হতে পারে।
+4. সাধারণত backward-compatible হয়।
+5. নতুন feature ব্যবহারের জন্য অতিরিক্ত configuration প্রয়োজন হতে পারে।
+
+## ৪. Patch Version
+
+Patch version-এ সাধারণত bug fix, security fix এবং ছোটখাটো সংশোধন করা হয়।
+
+উদাহরণ:
+
+`1.5.2` → `1.5.3`
+
+Patch version-এর বৈশিষ্ট্য:
+
+1. Bug fix করা হয়।
+2. Software-এর stability উন্নত করা হয়।
+3. সাধারণত নতুন public feature যোগ করা হয় না।
+4. Backward compatibility বজায় রাখা হয়।
+5. বিদ্যমান functionality পরিবর্তন না করেই সমস্যা সমাধান করা হয়।

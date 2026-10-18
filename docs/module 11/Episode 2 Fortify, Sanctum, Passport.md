@@ -1,44 +1,52 @@
-Module 11: Episode 2: Fortify, Sanctum, Passport
+# Module 11: Episode 2 — Fortify, Sanctum, Passport
 
-Laravel Breeze এর মতোই fortify। লারাভেল Breeze ইন্সটল করলে আমরা দেখতে পাব এর রাউট গুলো routes> auth.php ফাইলে চলে গেছে। আর কন্ট্রোলার গুলো থাকবে app> Http> Controllers> Auth ফোল্ডারে।
+## Laravel Fortify, Sanctum ও Passport
 
-Laravel Fortify শুধুমাত্র backend এর portion টুকু দেয়। আমরা চাইলে Breeze এর লজিকগুলো পরিবর্তন করতে পারি। কিন্তু Laravel Fortify এর কোডগুলো exposed থাকেনা এবং change করা যায়না।
+Laravel Breeze-এর মতোই Fortify Laravel Authentication-এর সঙ্গে সম্পর্কিত। Laravel Breeze ইনস্টল করলে এর authentication routes সাধারণত `routes/auth.php` ফাইলে এবং controllers `app/Http/Controllers/Auth` ফোল্ডারে পাওয়া যায়।
 
-Jetstream মূলত Laravel Fortify কেই ব্যবহার করে।
+### Laravel Fortify
+Laravel Fortify মূলত authentication-এর backend logic প্রদান করে। Jetstream, Fortify ব্যবহার করে।
 
-Sanctum মূলত Api Authentication নিয়ে কাজ করে। Single Page Application এ কাজ করে। এটি মূলত SPA Authentication।
+### Laravel Sanctum
+Sanctum মূলত API Authentication এবং Single Page Application (SPA) Authentication-এর জন্য ব্যবহৃত হয়। এটি session-based authentication-ও সমর্থন করে।
 
-একটি Session Based Authentication।
+### Laravel Passport
+Laravel Passport OAuth2 স্ট্যান্ডার্ড অনুসরণ করে API Authentication প্রদান করে।
 
-Laravel Passport মূলত OAuth2 এর স্ট্যান্ডার্ড মেইনটেইন করে। Api Authentication প্রদান করে।
+---
 
+# Module 11: Episode 3 — Error Handling: Rendering Exceptions
 
+## Exception Rendering
 
-Module 11 (3) : Episode 2: Error handling - Rendering Exceptions
+এই অধ্যায়ে আমরা Exception Rendering সম্পর্কে জানব।
 
-এই অধ্যায়ে আমরা Exception Rendering দেখব।
-app > Exceptions > Handler.php
-এখানে Exception handling এর কিছু লজিক আছে।
-লারভেল spatie/ignition প্যাকেজের মাধ্যমে Exception হ্যান্ডেল করে।
+### Exception Handling
 
-Route::get('/', function() {
+Laravel-এ Exception Handling-এর জন্য বিভিন্ন ব্যবস্থা রয়েছে। Laravel-এর নতুন ভার্সনগুলোতে exception configuration সাধারণত `bootstrap/app.php` ফাইলে করা হয়।
+
+### Exception তৈরি করা
+
+```php
+Route::get('/', function () {
     throw new Exception('Something went wrong');
 });
-এক্ষেত্রে আমরা window তে দেখতে পাব (STACK ট্রেস সহ)।
+```
 
-Exception ট্র্যাকিং এর জন্য আমরা দেখতে পাব রিডাইরেক্টের মাধ্যমে
-CONTEXT মেনু তে আমরা দেখতে পাব (STACK মেনু তে)।
-কাস্টম Exception তৈরি করার নিয়ম হলো:
-app > Exceptions > Handler.php
+এক্ষেত্রে Laravel-এর development error page-এ Stack Trace-সহ error দেখা যেতে পারে।
 
-public function register()
-{
-    $this->renderable(function (Exception $e, Request $request) {
-        return response() -> view('test');
+### Custom Exception Rendering
+
+আমরা চাইলে নিজেদের মতো করে Exception-এর response তৈরি করতে পারি।
+
+```php
+use Illuminate\Http\Request;
+use Throwable;
+
+->withExceptions(function ($exceptions) {
+    $exceptions->render(function (Throwable $e, Request $request) {
+        return response()->view('test', [], 500);
     });
-}
-
-আমরা চাইলে নিজেদের মত করে Exception ক্লাস বানাতে পারি।
-
-
+})
+```
 

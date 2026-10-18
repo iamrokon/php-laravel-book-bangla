@@ -162,6 +162,7 @@ ing Interface) এটি এমন একটি পদ্ধতি যার ম
 app/Http/Controllers/API/PostController.php
 
 
+```php
 <?php
 
 namespace App\Http\Controllers\API;
@@ -208,6 +209,7 @@ class DatabaseSeeder extends Seeder
         ]);
     }
 }
+```
 
 
 
@@ -218,7 +220,7 @@ Rest API হল এমন একটি API যার নির্দিষ্ট
 php artisan migrate
 php artisan db:seed
 Postman এ GET posts
-Laravel এ http://localhost:9998/api/posts -> সবগুলা পোস্ট দেখতে পাব।
+Laravel এ `http://localhost:9998/api/posts` -> সবগুলা পোস্ট দেখতে পাব।
 
 আমরা api এর কাছে সরাসরি json বাটি রিটার্ন করব না।
 লারাবেল api Resource নামে ফাংশনটি জিনিস রয়েছে।

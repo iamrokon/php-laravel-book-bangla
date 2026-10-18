@@ -10,18 +10,23 @@ Module 10(3) : Episode 7 : Chunking and Lazy Loading
 করে chunk করে লোড করতে পারি। অর্থাৎ অল্প
 অল্প করে ডেটা লোড করতে পারি।
 5mb 1.39s (মেমোরি কম লাগে ও সময় বেশি লাগে ১০০ টি করে)
-DB::table('users') ->orderBy('id') ->chunk(100, function(
-Collection $users) {
-foreach($users as $user) {
-}
-});
+```php
+DB::table('users')
+	->orderBy('id')
+	->chunk(100, function (Collection $users) {
+		foreach ($users as $user) {
+		}
+	});
+```
 
 ইমেজ বা অডিও কনটেন্ট এর ক্ষেত্রে এ ধরনের
 মেমোরি কম রাখা গুরুত্বপূর্ণ, সময় বেশি লাগলে ও
 সমস্যা নাই। এমন সময় বেশি লাগে বলে এটাকে
 অপারেশন হ্যান্ডেল করতে তাই কখন ব্যবহার হয়
 সেটা দেখতে হবে।
+```sql
 select * from users order by 'id' asc limit 10 offset 0
+```
 * "id" 10 20
 * "id" 10 20
 * "id" 10 20

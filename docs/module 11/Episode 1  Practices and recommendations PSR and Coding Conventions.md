@@ -1,182 +1,317 @@
-Module 11 (2) : Live etas Episode 1 : Best Practices and
-recommendations : PSR and Coding Conventions
+# Module 11 (2):
 
+## Episode 1: Best Practices and Recommendations — PSR and Coding Conventions
 
+### ১. PSR-12 Coding Standard
 
-PSR-12 এর আরেকটি নিয়ম হলোঃ কোনো একটা নতুন ক্লাসকে
-ইমপ্লিমেন্ট করার সময় প্যারেন্থেসিস ব্যবহার করতে হবে,
-এমনকি কোনো আর্গুমেন্ট পাস না করলেও হবে।
+PSR-12 হলো PHP-এর একটি coding style standard। এর উদ্দেশ্য হলো কোডকে পরিষ্কার, পাঠযোগ্য এবং একটি নির্দিষ্ট নিয়ম অনুযায়ী লেখা।
 
-class Animal {
-//
-$animal = new Animal(); // সঠিক
+#### ১.১. Object তৈরি করার সময় Parentheses ব্যবহার
 
-$animal = new Animal; // ভুল
+নতুন কোনো class-এর object তৈরি করার সময় parentheses ব্যবহার করতে হবে, এমনকি কোনো argument পাস না করলেও।
 
-- কোনো একটি ক্লাস 'extends' আর 'implements' এর কিওয়ার্ডগুলো
-করতে হলে ক্লাসের নামের সাথে ওই লাইনে ডিক্লেয়ার
-করতে হবে। আলাদা লাইনে করা যাবেনা। -> PSR-12 এর ভুল
-class Database extends Connection implements Eloquent
-//
-
-- ক্লাসের ওপেনিং ব্রেস নতুন লাইনে রাখতে হবে, অর্থাৎ
-ক্লাসের নামে লাইনে রাখা যাবেনা। ওপেনিং ব্রেস মূল
-ক্লাসের পরের লাইনে যাবে। -> PSR-12 এর ভুল
-class Animal { // এভাবে লেখা যাবে না
-}
+```php
 class Animal
 {
-
-
-
-    //... কোড
 }
 
-⇒ ক্লাস ডিক্লেয়ার করতে হলে ক্লাসের ও পেনিং ব্রেস এক
-একদম পরপরই, অর্থাৎ পরের লাইনেই 'use' কিওয়ার্ড দিয়ে
-ডিক্লেয়ার করতে হবে। — PSR-12 এর নিয়ম
+// সঠিক
+$animal = new Animal();
 
+// ভুল
+$animal = new Animal;
+```
+
+#### ১.২. `extends` এবং `implements` ব্যবহার
+
+কোনো class-কে `extends` বা `implements` ব্যবহার করে declare করলে class-এর declaration একই লাইনে রাখতে হবে।
+
+```php
+// সঠিক
+class Database extends Connection implements Eloquent
+{
+}
+
+// ভুল
+class Database
+    extends Connection
+    implements Eloquent
+{
+}
+```
+
+#### ১.৩. Class-এর Opening Brace
+
+PSR-12 অনুযায়ী class-এর opening brace (`{`) পরবর্তী লাইনে থাকবে।
+
+```php
+// সঠিক
+class Animal
+{
+    // কোড
+}
+
+// ভুল
+class Animal {
+    // কোড
+}
+```
+
+#### ১.৪. Trait ব্যবহার
+
+Class-এর ভেতরে trait ব্যবহার করার জন্য `use` keyword ব্যবহার করা হয়। সাধারণত class-এর opening brace-এর পরবর্তী লাইনে trait declare করা হয়।
+
+```php
 class Database
 {
     use Mutable;
-    // ওই লাইনে লেখা যাবে না
-
-    // ভ্যারিয়েবল ডিক্লেয়ার করে ফেলে ক্লাস প্রপার্টি ডিক্লেয়ার
-    করা যাবেনা। PSR-12 এর নিয়ম
-    → typed property এর ক্ষেত্রে টাইপ ডিক্লেয়ারেশন আর
-    প্রপার্টির নামের মাঝে অবশ্যই একটি স্পেস দিতে হবে।
-    PSR-12
-
-    class Hello
-    {
-        public string $message;
-        // ওই স্পেস না দিলে কাজ করবে কিন্তু স্ট্যান্ডার্ড
-    }
-
-→ মেথড ফাংশনের আর্গুমেন্ট গুলার মধ্যে যেগুলোর
-ডিফল্ট ভ্যালু সেট করা থাকবে, সেগুলোকে আর্গুমেন্ট
-লিস্টের শেষে রাখতে হবে। — PSR-12
-
-
-
-
-
-function greet ($name, $message, $is_special = true) {
 }
+```
 
-// মেথড কিংবা ফাংশন কল করতে গেলে মেথড বা ফাংশনের নাম
-আর প্যারামিটার এর মধ্যে কোন গ্যাপ রাখা যাবে না।
-এছাড়াও ওপেনিং প্যারেন্থেসিস এর পরে আর ক্লোজিং প্যারেন্থেসিস
-এর আগে কোন গ্যাপ দেওয়া যাবে না। - PSR-12
-sayHi();
-গ্যাপ হবে না
+#### ১.৫. Typed Property
 
-// টার্নারি অপারেটরের ক্ষেত্রে এবং ফাংশনের আগে পরে
-একটি গ্যাপ ব্যবহার করতে হবে।
-'yes' : 'no' -> এই জায়গাগুলোতে গ্যাপ না দিলেও
-true -> কাজ করবে, কিন্তু এটাই স্ট্যান্ডার্ড
+Typed property লেখার সময় property-এর type এবং নামের মাঝে একটি space দিতে হবে।
 
-// ক্লোজার বা অ্যানোনিমাস ফাংশনের ক্ষেত্রে
-কীওয়ার্ড এর পরে একটি গ্যাপ ব্যবহার করতে হবে।
-এছাড়াও ফাংশনের আগে-পরে 'use' কিওয়ার্ড ব্যবহার করলে,
-'use' কিওয়ার্ডের পরে গ্যাপ দিতে হবে। ($manmarks) {
-$percent = function ($marks) use ($manmarks) {
-return $marks * 100 / $manmarks;
-};
-echo "marks: 285 percentage: " . $percent(285);
-
-
-
-
-PHP-FIG -> PSRs থেকে Coding style পড়ে দেখতে হবে।
-Module 11(2): Episode 2: Best practices: Intro to coding
-Standard Tools (PHPCS etc.)
-
-bad.php (খারাপ কোড)
--> শুরুতে কোন স্পেস বা নিউলাইন থাকবে না।
-// php fmt -> ঠিকঠাক আগে পরে স্পেস নাই।
-<? $m1 = "Hello"; -> ভেরিয়েবলের নাম থেকে বোঝা যাচ্ছে না ভেরিয়েবলটি কি।
-$m2 = "World"; echo $m1 . $m2; // message1, message2
--> একই লাইনে ব্রেক দিয়ে যাব। একাধিক স্টেটমেন্ট রাখব না।
-function add-numbers($a,$b){ -> এর পর স্পেস দিতে হবে।
-$sum = $a+$b; -> কনক্যাট অপারেটরের আগে পরে স্পেস দিতে হবে।
-} $result = add-numbers(5, 7); -> ফাংশনের নামের পরে স্পেস দিতে হবে।
-Tab বা স্পেস দিতে হবে। -> লাইন নিচে যেতে হবে।
-lowercase IF($result>10) { -> এটা পরের লাইনে যাবে।
-echo "Result is not greater than 10!"; -> নিউ লাইন যাবে।
-} ELSE { -> নিউ লাইন যাবে।
-class Example class { public function __construct(){echo"..
-This is an example class.
-}
-}
-চাব বা public function say-hello (
-$name){ -> নিউ লাইন হবে।
-echo "Hello", $name; -> কনক্যাট এর আগে পরে স্পেস হবে।
-}
-?> -> শুধু পিএইচপি কোড থাকলে Ending ট্যাগ লাগবে না।
-
-
-
-
-
-
-_____________________________________page 37  addd korte hobe ekhane __________________________
-
-
-
-
-
-public function say hello ($name)
+```php
+class Hello
 {
-    echo "Hello, " . $name;
+    public string $message;
+}
+```
+
+এখানে `string` হলো property-এর type এবং `$message` হলো property-এর নাম।
+
+#### ১.৬. Default Argument-এর অবস্থান
+
+ফাংশন বা মেথডের যেসব parameter-এর default value থাকে, সেগুলো সাধারণত parameter list-এর শেষে রাখা উচিত। তবে PHP-তে কিছু ক্ষেত্রে optional parameter-এর পরে required parameter রাখার বিশেষ নিয়ম রয়েছে।
+
+```php
+function greet($name, $message, $isSpecial = true)
+{
+    // কোড
+}
+```
+
+#### ১.৭. Function ও Method Call-এর নিয়ম
+
+Function বা method-এর নামের পরে এবং opening parentheses-এর আগে কোনো space দেওয়া যাবে না। Parentheses-এর ভেতরে প্রথম ও শেষ argument-এর পাশে অপ্রয়োজনীয় space দেওয়া যাবে না।
+
+```php
+// সঠিক
+sayHi();
+greet('John');
+
+// ভুল
+sayHi ();
+greet( 'John' );
+```
+
+#### ১.৮. Ternary Operator-এর নিয়ম
+
+Ternary operator (`?:`) ব্যবহার করার সময় operator-এর আগে ও পরে space দিতে হবে।
+
+```php
+$result = ($marks >= 40) ? 'Pass' : 'Fail';
+```
+
+#### ১.৯. Closure বা Anonymous Function
+
+Closure-এর ক্ষেত্রে `function` keyword-এর পরে space দিতে হয়। `use` keyword ব্যবহার করলে তার পরেও space দিতে হবে।
+
+```php
+$fullMarks = 300;
+
+$percentage = function ($marks) use ($fullMarks) {
+    return $marks * 100 / $fullMarks;
+};
+
+echo 'Percentage: ' . $percentage(285);
+```
+
+### ২. PHP-FIG এবং PSR
+
+PHP-FIG হলো PHP Framework Interop Group। এই গ্রুপ PHP-এর বিভিন্ন coding standard ও interoperability guideline তৈরি করে।
+
+PHP-এর coding style সম্পর্কে আরও জানতে PHP-FIG-এর PSR documentation পড়া উচিত।
+
+
+
+---
+
+# Module 11 (2): Episode 2 — Best Practices: Introduction to Coding Standard Tools (PHPCS etc.)
+
+## ১. Coding Standard Tools
+
+Coding standard tools ব্যবহার করে PHP কোডের formatting, indentation, spacing এবং coding style-এর ভুল শনাক্ত করা যায়।
+
+### ১.১. Bad PHP Code-এর উদাহরণ
+
+নিচের কোডে variable naming, spacing, indentation এবং function naming-এর সমস্যা রয়েছে।
+
+```php
+<?php
+$m1 = "Hello";
+$m2 = "World";
+echo $m1 . $m2;
+
+function addNumbers($a, $b)
+{
+    $sum = $a + $b;
+    return $sum;
 }
 
-$example = new Exampleclass();
-$example->sayhello("John");
+$result = addNumbers(5, 7);
 
-PHP_Code Sniffer এর মাধ্যমে আমরা সহজেই কোডের ইনডেন্টেশন ঠিক করতে পারি। এটি পিএইচপি স্ট্যান্ডার্ড বা pear কোড স্ট্যান্ডার্ড অনুযায়ী কোড ঠিক করে দেবে।
-ইনস্টলেশন: composer global require "squizlabs/php-codesniffer"
-phpcs -h -> এই কমান্ড চালিয়ে কোডিংয়ের রুল হব এবং আমরা গুলো দেখতে পাব।
+if ($result > 10) {
+    echo "Result is greater than 10!";
+} else {
+    echo "Result is not greater than 10!";
+}
+```
 
-bad.php (কোডটি ভুল)
-$example = new Exampleclass();
--> এখানে কোন স্পেস বা ইনডেন্টেশন হবেনা
+### ১.২. Coding Standard অনুসরণের নিয়ম
 
-)
--> ইনডেন্টেশন ঠিক নাই -> $example->say-hello("John"); -> আর্গুমেন্ট এর আগে স্পেস রাখো
--> ইনডেন্টেশন ঠিক নাই -> আগের লাইনের আগে পরে স্পেস হবেনা
+- PHP কোডের indentation ঠিক রাখতে হবে।
+- Variable-এর নাম অর্থপূর্ণ হতে হবে।
+- এক লাইনে অপ্রয়োজনীয় একাধিক statement লেখা এড়িয়ে চলতে হবে।
+- Operator-এর আগে ও পরে প্রয়োজনীয় space দিতে হবে।
+- Function ও method-এর নামের ক্ষেত্রে উপযুক্ত naming convention অনুসরণ করতে হবে।
+- `if`, `else` এবং অন্যান্য control structure সঠিকভাবে লিখতে হবে।
+- Class-এর নাম সাধারণত `PascalCase` convention অনুসরণ করবে।
+- Method ও function-এর নাম সাধারণত `camelCase` convention অনুসরণ করবে।
+- শুধুমাত্র PHP কোড থাকা ফাইলে closing `?>` tag না দেওয়াই ভালো।
 
-?>
+### ১.৩. সঠিক Class ও Method-এর উদাহরণ
 
-Module 11 (3) : Episode 1: Error handling, Logging and Debugging : Exception handler
-লারাবেল Exception handling এর জন্য একটা global exception handler প্রোভাইড করে।
+```php
+<?php
 
+class ExampleClass
+{
+    public function sayHello($name)
+    {
+        echo 'Hello, ' . $name;
+    }
+}
 
-লারভেল app > Exceptions > Handler.php ফাইলে Handler নামক ক্লাস আছে যার আন্ডারে Illuminate\Foundation\Exceptions\Handler কে এক্সটেন্ড করে।
+$example = new ExampleClass();
 
-রিকুয়েস্ট রেসপন্সের যেকোনো জায়গায় কোনো Exception থ্রো হলে তা এই হ্যান্ডলার দ্বারা ধরা হয়।
+$example->sayHello('John');
+```
 
+এখানে `ExampleClass` একটি class, `sayHello()` একটি method এবং `$example` হলো class-এর object।
+
+### ১.৪. PHP_CodeSniffer (PHPCS)
+
+PHP_CodeSniffer হলো একটি tool, যার সাহায্যে PHP কোডের coding standard-এর ভুল শনাক্ত করা যায়। এটি নির্দিষ্ট coding standard অনুযায়ী কোড পরীক্ষা করে এবং কোথায় কী পরিবর্তন করা প্রয়োজন তা দেখায়।
+
+**ইনস্টলেশন কমান্ড:**
+
+```bash
+composer global require squizlabs/php_codesniffer
+```
+
+ইনস্টলেশন যাচাই করতে:
+
+```bash
+phpcs -h
+```
+
+কোনো PHP ফাইল পরীক্ষা করতে:
+
+```bash
+phpcs bad.php
+```
+
+PSR-12 অনুসারে কোড পরীক্ষা করতে:
+
+```bash
+phpcs --standard=PSR12 bad.php
+```
+
+PHPCS-এর মাধ্যমে কোডের indentation, spacing, naming convention এবং অন্যান্য coding standard-এর সমস্যা শনাক্ত করা যায়।
+
+**নোট:** PHPCS সাধারণত ভুলগুলো শনাক্ত করে। স্বয়ংক্রিয়ভাবে অনেক formatting-এর ভুল ঠিক করতে PHP Code Beautifier and Fixer (`phpcbf`) ব্যবহার করা যায়।
+
+```bash
+phpcbf --standard=PSR12 bad.php
+```
+
+### ১.৫. Page 37-এর নোট
+
+এখানে Page 37-এর বিষয়বস্তু যোগ করতে হবে।
+
+---
+
+# Module 11 (3): Episode 1 — Error Handling, Logging and Debugging
+
+## ১. Exception Handler
+
+Laravel-এ Exception Handling-এর জন্য একটি centralized exception-handling ব্যবস্থা রয়েছে। Request processing-এর সময় কোনো exception বা error ঘটলে Laravel সেটি report এবং render করতে পারে।
+
+পুরোনো Laravel ভার্সনে `app/Exceptions/Handler.php` ফাইলে `Handler` class পাওয়া যায়। নতুন Laravel ভার্সনে exception configuration সাধারণত `bootstrap/app.php` ফাইলে করা হয়।
+
+### ১.১. Exception কী?
+
+Exception হলো এমন একটি ঘটনা, যা প্রোগ্রামের স্বাভাবিক execution-এ বাধা সৃষ্টি করে। Exception throw হলে সেটি `try-catch` block-এর মাধ্যমে handle করা যায়।
+
+```php
 try {
-    // Code that can throw exception
+    // যে কোড থেকে Exception হতে পারে
 } catch (Exception $e) {
-    // Handle exception
+    // Exception handle করার কোড
 }
+```
 
-লারভেল এর বেজ কার্নেল Kernel এর ভেতরে আমরা দেখতে পাই try catch () ব্লক রয়েছে। যেখান থেকে Exception থ্রো হয়। এই হ্যান্ডেল() মেথডই পুরো রিকুয়েস্ট রেসপন্স হ্যান্ডেল করে।
+### ১.২. Laravel-এর Exception Handling Process
 
-framework > src > Illuminate > Foundation > Http > Kernel.php
+Laravel-এর HTTP Kernel request-কে router-এর মাধ্যমে process করে। Request handling-এর সময় কোনো throwable error ঘটলে Laravel-এর exception-handling ব্যবস্থা সেটি report এবং render করে।
 
-public function handle($request) {
+পুরোনো Laravel architecture-এ HTTP Kernel-এর ফাইলের অবস্থান ছিল:
+
+`vendor/laravel/framework/src/Illuminate/Foundation/Http/Kernel.php`
+
+উদাহরণস্বরূপ, request handle করার প্রক্রিয়াটি ধারণাগতভাবে এমন:
+
+```php
+public function handle($request)
+{
     try {
         $response = $this->sendRequestThroughRouter($request);
     } catch (Throwable $e) {
-        $this->reportException($e); // এটি এক্সেপশন লগার সাইডে লগ তৈরি করে
-        $response = $this->renderException($request, $e); // ও ইউজারকে কাছে উত্তর পাঠায়
+        $this->reportException($e);
+
+        $response = $this->renderException($request, $e);
     }
+
+    return $response;
 }
+```
 
+**এখানে:**
 
-এরর Throwable হলো : Error এবং Exception দুটিই
-Throwable ইন্টারফেসকে extend করে বানানো
+- `reportException()` — exception report করার প্রক্রিয়া চালায়।
+- `renderException()` — exception-কে HTTP response-এ রূপান্তর করে।
+- `$response` — request-এর জন্য তৈরি response।
 
+এটি Laravel-এর exception-handling process বোঝানোর জন্য একটি ধারণাগত উদাহরণ; সব Laravel version-এর মূল source code হুবহু এমন নাও হতে পারে।
 
+### ১.৩. Throwable কী?
+
+PHP-তে `Throwable` হলো একটি interface। `Error` এবং `Exception`—দুটিই `Throwable` implement করে। তাই `catch (Throwable $e)` ব্যবহার করে উভয় ধরনের throwable ধরা যায়।
+
+```php
+try {
+    throw new Exception('Something went wrong');
+} catch (Throwable $e) {
+    echo $e->getMessage();
+}
+```
+
+### ১.৪. Logging এবং Debugging
+
+- **Logging:** কোনো error বা গুরুত্বপূর্ণ event-এর তথ্য সংরক্ষণ করা।
+- **Debugging:** কোডের সমস্যা খুঁজে বের করে সমাধান করা।
+- **Exception Handling:** exception ঘটলে সেটি report করা এবং উপযুক্ত response দেওয়া।
+
+Laravel-এর logging ব্যবস্থা error-এর তথ্য log file-এ সংরক্ষণ করতে পারে। Development environment-এ debugging-এর জন্য exception page-এ stack trace-ও দেখা যেতে পারে।
