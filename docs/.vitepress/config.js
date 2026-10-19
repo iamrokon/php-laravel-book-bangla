@@ -170,6 +170,21 @@ export default {
                     ]
                 },
                 {
+                    text: 'মডিউল ১৪: RESTful API',
+                    collapsed: true,
+                    items: [
+                        { text: 'Episode 1: RESTful API Development', link: '/module-14/ep-1%20Line%20class%20-%201%20Restful%20API%20development' },
+                        { text: 'Live Class 2: REST API Part 2', link: '/module-14/Live%20Class%202-Rest%20Api%20Part-2' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৫: Laravel Console Command',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 1: Laravel Console Command', link: '/Module-15/Laravel_Consol_ecommand' },
+                    ]
+                },
+                {
                     text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
                     collapsed: false,
                     items: [
@@ -188,6 +203,27 @@ export default {
                         { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
                         { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
                         { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
+                    ]
+                }
+            ],
+
+            '/module-14/': [
+                {
+                    text: 'মডিউল ১৪: RESTful API',
+                    collapsed: false,
+                    items: [
+                        { text: 'Episode 1: RESTful API Development', link: '/module-14/ep-1%20Line%20class%20-%201%20Restful%20API%20development' },
+                        { text: 'Live Class 2: REST API Part 2', link: '/module-14/Live%20Class%202-Rest%20Api%20Part-2' },
+                    ]
+                }
+            ],
+
+            '/Module-15/': [
+                {
+                    text: 'মডিউল ১৫: Laravel Console Command',
+                    collapsed: false,
+                    items: [
+                        { text: 'Live Class 1: Laravel Console Command', link: '/Module-15/Laravel_Consol_ecommand' },
                     ]
                 }
             ],

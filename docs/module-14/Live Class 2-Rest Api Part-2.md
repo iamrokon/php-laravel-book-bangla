@@ -1,5 +1,5 @@
 
-Module 14: Live Class 2: Rest Api Part-2
+# Module 14: Live Class 2: Rest Api Part-2
 রিকুয়েস্ট, Debug করার জন্য আমরা Laravel Telescope ব্যবহার
 করতে পারি।
 Api তে version ম্যানেজ করা অত্যন্ত গুরুত্বপূর্ণ। web এর ক্ষেত্রে দেওয়া হবে যে এটাই নোট করবে। এবং versin ম্যানেজ করা আলোচনা।
@@ -7,9 +7,10 @@ Api তে version ম্যানেজ করা অত্যন্ত গু�
 
 
 Api versining এর ইমপ্লিমেন্টেশনঃ
+
 laravel-news.com/api-versioning-in-laravel-11
 laravel 10
-
+```php
 RouteServiceProvider.php
 public function boot()
 {
@@ -31,6 +32,7 @@ public function boot()
             ->group(base_path('routes/api_v2.php'));
     });
 }
+```
 
 বিয়েঃ কোন ফোল্ডারে api, ভের্সনই করতে চাইলে internal-api.php নাম
 3 external-api.php নাম
@@ -65,6 +67,9 @@ Route::prefix('v1') -> group(function() {
 আবার laravel 10 ও RouteServiceProvider ও আমরা যে কাজ
 করছিলাম laravel 11 তেও then() প্যারামিটার সেটি পাস করতে
 ফাইল থেকে withRouting() তে then() প্যারামিটার।
+
+
+
 সূত্র: laravel-news.com/api-versioning-in-laravel-11
 return Application::configure(dirname(__DIR__))
 ->withRouting(
@@ -76,6 +81,8 @@ Route::middleware('api')
 ->prefix('api/v2')
 ->group(base_path('routes/api_v2.php'));
 }
+
+
 
 
 
@@ -98,7 +105,7 @@ API এর ডকুমেন্টেশন ইন্ট্রিগেশন�
 Swagger ডকুমেন্টেশন বানাতে পারে।
 একটি রিকোয়েস্ট থেকে কত ধরনের রেসপন্স হতে পারে সেগুলো
 সবই Swagger দেখিয়ে দেয়। যেমন-(422, 404, 200 রেসপন্স)।
-consultation.megaminds.technology/docs/api#/operations/email.verify
+```consultation.megaminds.technology/docs/api#/operations/email.verify```
 swagger তে গিয়ে মোটামুটি ভাল api ডকুমেন্টেশন এর জন্য অত
 সাকসেসফুল হয় নয়।
 পোস্টম্যান ও ডেটাবেজ আমাকে api গুলো ম্যানেজ করেন।
@@ -112,16 +119,19 @@ Bearer Token {{token}}
 
 POST /login
 
+
 Script
 var jsonData = pm.response.json();
 pm.environment.set("token", jsonData.data.token);
 pm.environment.set("patient_uuid", jsonData.data.uuid);
 
+
 আমরা চাইলে রাউটে ও এই ভেরিয়েবলগুলো ব্যবহার করতে পারি।
-GET {{url}}/users/session:packages/{{session-package_uuid}}/availability/2024-08-24
+```GET {{url}}/users/session:packages/{{session-package_uuid}}/availability/2024-08-24```
 
 Ph13m
-Sanctum দিয়ে API অথেন্টিকেশন
+```Sanctum``` দিয়ে API অথেন্টিকেশন
+```php
 Schema::create('personal_access_tokens', function (Blueprint $table) {
     $table->id();
     $table->morphs('tokenable');
@@ -132,7 +142,7 @@ Schema::create('personal_access_tokens', function (Blueprint $table) {
     $table->timestamp('expires_at')->nullable();
     $table->timestamps();
 });
-
+```
 
 
 

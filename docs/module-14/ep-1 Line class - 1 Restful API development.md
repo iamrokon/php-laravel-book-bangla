@@ -291,6 +291,8 @@ Service ক্লাসকে আমরা ব্যবহার করব ম�
 যখন আমাদের কালেকশন এর সাথে এক্সট্রা ডেটা পাঠাতে হয়। যখন আমাদের রিসোর্স লিস্ট রিটার্ন করতে হয় তখন রিসোর্স কালেকশন ক্লাস বানাতে হয়।
 
 যেমন:
+
+```php
 Resources\V1\AppointmentForExpertResourceCollection.php
 
 class AppointmentForExpertResourceCollection extends ResourceCollection {
@@ -312,7 +314,9 @@ class AppointmentForExpertResourceCollection extends ResourceCollection {
     }
 }
 
-AppointmentController.php
+```
+
+```AppointmentController.php```
 
 
 
@@ -323,6 +327,7 @@ AppointmentController.php
 কে আলাদা রাখার হিসেবে। ফোল্ডার আর্কিটেকচার।
 ওটাকে মেইনটেইন করা।
 
+```php
 class AppointmentController {
     $collection = new AppointmentForExpertResourceCollection(
         $packageBookings);
@@ -333,6 +338,7 @@ class AppointmentController {
         'meta' => $collection['meta'],
     ]);
 }
+```
 
 Api তে ফেরত ও with দিয়ে Eagerload করা হলো n+1
 কোয়েরি প্রবলেম দূর হবে।
@@ -347,6 +353,7 @@ Api Resource এর phpleague fractal নামে একটা package
 
 
 Api তে এসে এরর মেসেজ রিটার্নঃ
+```php
 app>Http>Controllers>Api>V1>AppointmentController.php
 Module 14 Live Class 2:
 public function getAppointmentDetailsForUser(Request $request) {
@@ -359,6 +366,10 @@ public function getAppointmentDetailsForUser(Request $request) {
     API তে কেমন বাছতে হয় ওভাবে দেখাব।
     হয় না।
     আবার কোন কোন রিটার্ন করা হয় নিম্নরুপঃ
+
+    ```
+
+    ```php
     AppointmentController.php
     public function scheduleSession(SessionScheduleRequest $request,
                                     SessionBookingService $sessionBookingService)
@@ -379,9 +390,11 @@ public function getAppointmentDetailsForUser(Request $request) {
             ], 422);
         }
     }
+
+    ```
     কমিউনিকেশন লার্নিং বালাইড কর।
 
-
+```php
 app\Http\Requests\v1\SessionScheduleRequest {
 class SessionScheduleRequest {
     public function rules() {
@@ -390,13 +403,11 @@ class SessionScheduleRequest {
         ];
     }
 }
+```
 
 
-
-Module 14: Live Class 2: Rest Api Part-2
+# Module 14: Live Class 2: Rest Api Part-2
 রিকুয়েস্ট, Debug করার জন্য আমরা Laravel Telescope ব্যবহার
 করতে পারি।
 Api তে version ম্যানেজ করা অত্যন্ত গুরুত্বপূর্ণ। web এর ক্ষেত্রে দেওয়া হবে যে এটাই নোট করবে। এবং versin ম্যানেজ করা আলোচনা।
 কিন্তু Api এর ক্ষেত্রে আমরা আরকজন ক্লায়েন্ট কে যেহেতু বাটি দিচ্ছি নির্দিষ্ট ফরম্যাট ও তে দিতে আমরা যেখানে কোন লজিক চেক করলে ক্লায়েন্ট সাইডে ইস্যু তৈরি করবে, বা অ্যাপ্লিকেশনটি ব্রেক করবে, তখন Api তে ভার্সন ম্যানেজ করা অত্যন্ত গুরুত্বপূর্ণ। এভাবে ডকুমেন্টেশন তৈয়ার হতে হবে।
-
-
