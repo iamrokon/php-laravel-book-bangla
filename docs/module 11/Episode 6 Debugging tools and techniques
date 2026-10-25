@@ -1,0 +1,58 @@
+Module 11 (3): Episode 6: Debugging tools and techniques
+(dd, var dump server, debugbar, ray, telescope etc)   ডিবাগিং: আমাদের কোড ঠিকমতো আসছে কিনা তা দেখার জন্য ডিবাগ করতে হয়।  
+
+```php
+Route::get('/', function () {
+    $person = [
+        'name' => 'Shaon'
+    ];
+    var_dump($person);
+});
+```
+
+* `var_dump($person);` (Variable dump) কোডের এক্সিকিউশন অফ করে দেয় না।]
+* `dd($person);` (Dump and die) কোডের এক্সিকিউশন অফ করে দেয়।
+* ডিবাগিং এর মাধ্যমে dd করতে পারি।
+
+আমরা চাইলে এভাবে চেইনিং এর মাধ্যমেও `dd` করতে পারি।
+
+```php
+collect(['Jane Doe', 'Jane Doe'])
+    ->map()
+    ->dd();
+```
+
+কোন কোড রান হতে কতটুকু সময় নিচ্ছে আমরা চাইলে সেটা Benchmark করে ও দেখতে পারি।
+
+```php
+Benchmark::dd(fn () => User::find (1));
+```
+`Output: 8.262 ms`
+
+---
+
+
+laravel-debugbar - লারাভেল প্রজেক্টে এই প্যাকেজ ব্যবহার করতে হবে।
+composer require barryvdh/laravel-debugbar --dev
+debugbar টা তখনই কাজ করবে যখন .env ফাইলে APP_DEBUG = true হবে অথবা APP_ENV = production এর এভবে হবে না।
+
+`Laravel dump server -> beyondco.de/docs/laravel-dump-server/installation`
+php artisan dump-server কমান্ড লাইনে রান করব।
+আউটপুট টার্মিনালে দেখা যাবে না, কিন্তু যেই রাউটে রান করলে dd() বা dump() কোড থাকে, সেই কোডটি ব্রাউজারে বা উইন্ডোতে দেখা যাবে।
+
+```PHP
+Route::get('/', function () {
+    $person = [
+        'name' => 'Shaon'
+    ];
+    dump($person);
+});
+```
+dump-server টা তখনই কাজ করবে যখন আমরা view ব্রাউজারে আউটপুট দেখতে পাব না - যেমন Notification ইত্যাদি।
+
+এছাড়া ডিবাগিং এর কাজ করার সময় ডিবাগবার ব্যবহার করতে পারি।
+
+`Laravel Telescope`
+
+Ray নামক spatie-র টুলটি আছে ডিবাগিং এর জন্য।
+ymynay.app তোর paid.

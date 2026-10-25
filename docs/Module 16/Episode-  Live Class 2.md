@@ -58,4 +58,3 @@ File Storage: Episode 4: Scaling issue for file storage:
 ```
 আমরা চাইলে Google Cloud ও ব্যবহার করতে পারি ফাইল স্টোর করার জন্য। কিন্তু এর জন্য লারাভেলের ডিফল্ট কোনো Driver নাই। তবে spatie-র একটা প্যাকেজ আছে। 
 github.com/spatie/laravel-google-cloud-storage
-
