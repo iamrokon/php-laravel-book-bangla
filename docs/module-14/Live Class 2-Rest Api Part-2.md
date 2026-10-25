@@ -127,9 +127,10 @@ pm.environment.set("patient_uuid", jsonData.data.uuid);
 
 
 আমরা চাইলে রাউটে ও এই ভেরিয়েবলগুলো ব্যবহার করতে পারি।
+
+
 ```GET {{url}}/users/session:packages/{{session-package_uuid}}/availability/2024-08-24```
 
-Ph13m
 ```Sanctum``` দিয়ে API অথেন্টিকেশন
 ```php
 Schema::create('personal_access_tokens', function (Blueprint $table) {

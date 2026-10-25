@@ -50,3 +50,75 @@ use Throwable;
 })
 ```
 
+# Module 11 (3): Episode 2: Error handling - Rendering Exceptions   এই এপিসোডে আমরা Exception Rendering দেখব।
+
+
+app > Exceptions > Handler.php
+এখানে Exception handling এর কিছু লজিক আছে।
+লারাভেল spatie/ignition প্যাকেজের মাধ্যমে Exception হ্যান্ডেল করে।
+
+Route::get('/', function () {
+    throw new Exception('Something went wrong!');
+});
+```
+
+এই ক্ষেত্রে ব্রাউজারে বা উইন্ডোতে এই Exception এর ট্র্যাকিং বা স্ট্যাক ট্রেস (Stack Trace) দেখাবে।
+**CONTEXT:** ভুল হয়েছে তা দেখতে পাব (stack trace তে)। আমরা চাইলে আমরা দেখতে পাব Request এর সাথে কাস্টম Exception থ্রো করে নিম্নরূপ:
+`app > Exceptions > Handler.php`
+
+```php
+public function register()
+{
+    $this->renderable(function (\Exception $e, $request) {
+        return response()->view('test');
+    });
+}
+```
+
+আমরা চাইলে নিজেদের মত করে Exception ক্লাস বানাতে পারি।
+
+---
+```php
+
+ProductNotFoundException.php:
+
+namespace App\Exceptions;
+
+class ProductNotFoundException extends \Exception
+{
+    // ...
+}
+```
+
+web.php:
+
+```php
+Route::get('/', function(){
+    throw new App\Exceptions\ProductNotFoundException('Something went wrong!');
+});
+```
+
+* এটিকে এবার আমাদের Exception এর Handler ক্লাসে হ্যান্ডেল করতে হবে নিম্নরূপে: প্রজেক্টের যথাস্থানে (`app > Exceptions > Handler.php`)
+
+```php
+public function register() {
+    $this->renderable(function (ProductNotFoundException $e, Request $request) {
+        return response()->view('test');
+    });
+}
+```
+
+* যেহেতু api এর ক্ষেত্রে কোনো ভুল হলে আমরা কোনো view page বা লারাভেলের ডিফল্ট এরর পেজ দেখাবো না, client এর জন্য পেজ না পাঠিয়ে json ডাটা পাঠিয়ে থাকি। সেটি আমরা নিম্নরূপ পাঠিয়ে থাকি।
+
+```php
+public function register()
+{
+    $this->renderable(function (NotFoundHttpException $e, Request $request) {
+        if ($request->is('api/*')) {
+            return response()->json([
+                'message' => 'Record not found.'
+            ], 404);
+        }
+    });
+}
+```

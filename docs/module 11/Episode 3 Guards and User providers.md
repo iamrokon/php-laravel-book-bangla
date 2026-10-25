@@ -500,3 +500,68 @@ Patch version-এর বৈশিষ্ট্য:
 3. সাধারণত নতুন public feature যোগ করা হয় না।
 4. Backward compatibility বজায় রাখা হয়।
 5. বিদ্যমান functionality পরিবর্তন না করেই সমস্যা সমাধান করা হয়।
+
+
+# Module 11 (3) : Episode 3 : Error handling - Reporting exceptions
+
+# Reporting exception:
+যখন আমাদের অ্যাপ্লিকেশন-এ কোন এরর হয় আমরা চাইলে সেটাকে log করে রাখতে পারি বা কোন এরর ট্র্যাকিং তুলে সেটাকে স্টোর করতে পারি। পপুলার এরর ট্র্যাকিং টুলগুলো হলো:
+Flare, Bugsnag, Sentry ইত্যাদি। এরর সম্পর্কিত বিস্তারিত তথ্য: কি কারণে এরর হয়েছে, কখন হয়েছে সব এই টুলগুলো থেকে দেখা যাবে বাই ডিফল্ট লারাভেল এররগুলোকে log করে রাখে। 
+
+এরর ট্র্যাকিং টুল sentry ব্যবহারের জন্য ওদের সাইটে একটা একাউন্ট খুলতে হবে। সেই sentry-র ড্যাশবোর্ডেই আমরা এরর গুলো দেখতে পাব। এছাড়া Handler ক্লাসে reportable মেথডে সেটা বলে দিতে হবে।
+
+```php
+app > Exceptions > Handler.php
+public function register()
+{
+    $this->reportable(function (Throwable $e) {
+        Integration::captureUnhandledException($e);
+    })->stop();
+}
+```
+
+stop(): এর সাথে log করা stop হয়ে যাবে। অর্থাৎ শুধুমাত্র রিপোর্ট করার কাজ করবে।
+
+এছাড়া এটি .env এ ইনক্লুড করতে হবে।
+
+.env লোকাল এররের দরকার হবে না, শুধুমাত্র প্রডাকশন ডোমেইনে DSN ব্যবহার করব।
+SENTRY_LARAVEL_DSN = https://...
+
+এর পর টেস্ট করার জন্য এই কমান্ড চালাব:php artisan sentry:test
+
+আমরা চাইলে নির্দিষ্ট কোন এররের জন্য আমাদের এরর রিপোটিং টুলটা ব্যবহার করতে পারি। তবে এটা সাধারণত করা হয় না।
+```php
+public function register()
+{
+    $this->reportable(function ProductNotFoundException $e) {
+        Integration::captureUnhandledException($e);
+    });
+}
+```
+
+আমরা যদি চাই, কোন একটা রিপোর্ট sentry তে না যাক সেটাও বলে দিতে পারি।
+```php
+Handler.php
+protected $dontReport = [
+    ProductNotFoundException::class,
+];
+```
+
+আমরা চাইলে আমাদের কাস্টম Exception ক্লাসে আমাদের বিষয়টি এর Rendering এর লজিক বলে দিতে পারি। 
+
+```php
+class ProductNotFoundException extends Exception
+{
+    // ...
+    public function report()
+    {
+        // এর ভেতরে আমরা আমাদের সঠিক বলে দিব
+    }
+    public function render (Request $request)
+    {
+        return response (*); // Custom Logic বলতে পারি
+    }
+}
+```
+
+* এক্ষেত্রে আমাদের আর এই Exception হ্যান্ডলার ক্লাসে Handler ক্লাসে কিছু বলে দিতে হবে না।

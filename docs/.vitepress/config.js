@@ -151,6 +151,8 @@ export default {
                         { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
                         { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
                         { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
+                        { text: 'Episode 5: Error Handling - Logging', link: '/module%2011/Episode%205Error%20handling%20-%20Logging' },
+                        { text: 'Episode 6: Debugging Tools and Techniques', link: '/module%2011/Episode%206%20Debugging%20tools%20and%20techniques' },
                     ]
                 },
                 {
@@ -159,6 +161,13 @@ export default {
                     items: [
                         { text: 'Laravel Helpers', link: '/laravel/helpers' },
                         { text: 'Laravel Collections', link: '/laravel/collections' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১২: ইলোকুয়েন্ট ওআরএম',
+                    collapsed: true,
+                    items: [
+                        { text: 'Episode 1: Intro to Eloquent ORM', link: '/module%2011/Module%2012/Episode%201%20Intro%20to%20Eloquent%20ORM' },
                     ]
                 },
                 {
@@ -185,6 +194,14 @@ export default {
                     ]
                 },
                 {
+                    text: 'মডিউল ১৯',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 1: Web Developer Essentials', link: '/Module%2019/Live%20Class%20-%201' },
+                        { text: 'Live Class 2: Deployment', link: '/Module%2019/Live%20class%202%20Deployment' },
+                    ]
+                },
+                {
                     text: 'ইন্টারভিউ প্রস্তুতি (Interview QA)',
                     collapsed: false,
                     items: [
@@ -203,6 +220,18 @@ export default {
                         { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
                         { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
                         { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
+                        { text: 'Episode 5: Error Handling - Logging', link: '/module%2011/Episode%205Error%20handling%20-%20Logging' },
+                        { text: 'Episode 6: Debugging Tools and Techniques', link: '/module%2011/Episode%206%20Debugging%20tools%20and%20techniques' },
+                    ]
+                }
+            ],
+
+            '/module%2011/Module%2012/': [
+                {
+                    text: 'মডিউল ১২: ইলোকুয়েন্ট ওআরএম',
+                    collapsed: false,
+                    items: [
+                        { text: 'Episode 1: Intro to Eloquent ORM', link: '/module%2011/Module%2012/Episode%201%20Intro%20to%20Eloquent%20ORM' },
                     ]
                 }
             ],
@@ -214,6 +243,7 @@ export default {
                     items: [
                         { text: 'Episode 1: RESTful API Development', link: '/module-14/ep-1%20Line%20class%20-%201%20Restful%20API%20development' },
                         { text: 'Live Class 2: REST API Part 2', link: '/module-14/Live%20Class%202-Rest%20Api%20Part-2' },
+                        { text: 'Module 14 (2): Live Class 2: Caching', link: '/module-14/Module%2014(2)%20Live%20Class%202%20Caching' },
                     ]
                 }
             ],
@@ -224,6 +254,17 @@ export default {
                     collapsed: false,
                     items: [
                         { text: 'Live Class 1: Laravel Console Command', link: '/Module-15/Laravel_Consol_ecommand' },
+                    ]
+                }
+            ],
+
+            '/Module%2019/': [
+                {
+                    text: 'মডিউল ১৯',
+                    collapsed: false,
+                    items: [
+                        { text: 'Live Class 1: Web Developer Essentials', link: '/Module%2019/Live%20Class%20-%201' },
+                        { text: 'Live Class 2: Deployment', link: '/Module%2019/Live%20class%202%20Deployment' },
                     ]
                 }
             ],
