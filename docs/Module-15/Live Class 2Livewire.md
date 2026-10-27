@@ -15,11 +15,13 @@ php artisan make:livewire counter
 php artisan livewire // php artisan livewire:make counter
 views -> counter.blade.php কম্পোনেন্টে তৈরি করতে হবে
 
+```html
 <div> -> প্রতিটিতে livewire কম্পোনেন্টে অবশ্যই একটা রুট রাখতে হবে
 <button wire:click='plus'>+</button>
 <p>{ $count }</p>
 <button wire:click='minus'>-</button>
 </div>
+```
 
 Counter কম্পোনেন্ট তৈরি হলে প্রধান দুইটা ফাইল পাবে:
 1. views > counter.blade.php
@@ -28,11 +30,13 @@ Counter কম্পোনেন্ট তৈরি হলে প্রধান
 Route::get('/', function () { return view('welcome'); });
 
 (ভিতরে কোড) HTML (বডি ট্যাগ সহ)
+```html
 <body>
 <main>
 <Livewire:counter>
 </main>
 </body>
+```
 
 Livewire মূলত ডেমোক্রেটিক AJAX রিকোয়েস্টের মাধ্যমে কাজ করে। 
 অ্যাক্টিভিটির Network ট্যাব এর Fetch/XHR ফিল্ডে গেলে আমরা লাইভওয়্যার এর রিকোয়েস্টগুলো দেখতে পাব। 
@@ -40,6 +44,7 @@ Livewire তে বিভিন্ন রুলস বা প্রপার্�
 
 আমরা যদি খুঁজে দেখি app > Livewire > Counter.php
 
+```php
 class Counter extends Component
 {
     public $count = 0;
@@ -56,6 +61,7 @@ class Counter extends Component
         }
     }
 }
+```
 
 
 public function render()
@@ -68,6 +74,7 @@ php artisan livewire:make Memes[cite: 32]
 memes.blade.php ফাইল (কম্পোনেন্ট) তৈরি হবে। live.debounce দিলে সাথে সাথে change হবে memes.blade.php -> live.debounce দিলে কিছু সময় পরে change হবে।
 live.throttle মিলিসেকেন্ড পর পর text live.throttle.1000ms মিলিসেকেন্ড পর পর text change হবে।
 
+```html
 <div class=>
 <form wire:submit='save'>
 <input wire:model.live='meme' placeholder="add your meme text">
@@ -79,12 +86,12 @@ Your next meme is: { $meme }
 @foreach ($memes as $memeTemplate)
 <li>{ $memeTemplate }</li>
 @endforeach
+```
 
 web.php
 Route::get('/memes', Memes::class)->name('memes');
 
 php artisan make:livewire layout -> এই ফাইলটি না বানালে সরাসরি কাজ করবে livewire লেআউট মেইন পেজ বা।
-``
 
 
 
@@ -114,6 +121,7 @@ class Memes extends Component
 
 Livewire এ আমরা চাইলে inline HTML ও লিখতে পারি।
 
+```php
 Counter.php
 public function render() {
     return <<< 'HTML'
@@ -150,6 +158,7 @@ boot() -> ...
 
 সাদিক স্কুলে গেলে তাকে আমরা একটা কাজ চিনিয়ে দেব। বিয়ে করলে একটা ঘর বানিয়ে দেব। তেমনি কম্পোনেন্টের বিভিন্ন lifecycle এ আমরা বিভিন্ন কাজ করতে পারি।
 
+```php
 class Memes extends Component
 {
     public $memes = [];
@@ -161,7 +170,7 @@ class Memes extends Component
         ];
     }
 }
-``
+```
 
 
 
@@ -185,8 +194,10 @@ class Meme {
 length
 আমরা চাইলে লাইভ ভিউতে লেংথ ও শো করতে পারি alpinejs দিয়ে[cite: 31]।
 
+```html
 Your next meme is: <span x-text="$wire.meme.length"><span>[cite: 31]
 </form>[cite: 31]
+```
 
 এখনি meme অ্যাড করলে স্পিন হুইল লাইভওয়্যার দিয়ে <p wire:loading wire:target="save">Saving Meme...</p> এভাবে আমরা লোডিং স্পিনার শো করব ।
 
@@ -197,12 +208,14 @@ components > layouts > app.blade.php
 web.php
 Route::get('/', Counter::class);
 components > layouts > app.blade.php
+```html
 <body>
 <nav>
 <a href="/" wire:navigate>Counter<a>
 <a href="{{ route('memes') }}" wire:navigate>Memes<a>
 <a href="{{ route('posts') }}" wire:navigate>Posts<a>
 <nav>
+```
 
 অন্যান্য post রাউট (মডেল সহ)
 php artisan make:model Post -mf
@@ -252,6 +265,7 @@ class Posts extends Component
 }
 
 posts.blade.php
+```html
 <div>
 <ul>
 @forelse ($posts as $post)
@@ -269,6 +283,7 @@ No posts to show
 </form>
 { $posts->links() } -> pagination লিঙ্ক বাটন
 </div>
+```
 
 
 
@@ -280,13 +295,16 @@ web.php
 Route::get('/posts', Posts::class)->name('posts');
 
 posts.blade.php
+```html
 <div>
 <form wire:submit="">
 <input type="search" wire:model.live.debounce="search"
 placeholder="search by post title">
 </form>
 </div>
+```
 
+```php
 Posts.php
 use Livewire\Attributes\Url;[cite: 19]use Livewire\WithPagination;
 class Posts extends Component {
@@ -317,8 +335,11 @@ web.php
 Route::get('upload', UploadMeme::class)->name('upload');
 
 app.blade.php
+```html
 <a href="{{ route('upload') }}" wire:navigate>Upload a meme<a>
+```
 
+```php
 UploadMeme.php
 use Livewire\WithFileUploads;
 
@@ -337,8 +358,10 @@ class UploadMeme extends Component
         return view('livewire.upload-meme');
     }
 }
+```
 
 uploadd-meme.blade.php (লাইন লান)
+```html
 <div>
 <form wire:submit='save' enctype="multipart/form-data">
 <input type="file" wire:model.live='image'>
@@ -356,3 +379,4 @@ uploadd-meme.blade.php (লাইন লান)
 </div>
 @endif
 </div>
+```
