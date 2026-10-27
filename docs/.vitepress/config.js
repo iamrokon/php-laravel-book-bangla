@@ -1,4 +1,4 @@
-export default {
+const config = {
     title: "Learn With Rokon",
     description: "একটি কমপ্লিট প্রোগ্রামিং বুক | সহজ ভাষায় ওয়েব ডেভেলপমেন্ট ও প্রোগ্রামিং শিখুন ।",
     themeConfig: {
@@ -142,14 +142,6 @@ export default {
                     ]
                 },
                 {
-                    text: 'মডিউল ১০ ও ১১: অথেন্টিকেশন ও মিডলওয়্যার',
-                    collapsed: true,
-                    items: [
-                        { text: 'Validation in Laravel', link: '/laravel/validation' },
-                        { text: 'Authentication Mechanisms', link: '/laravel/authentication' },
-                    ]
-                },
-                {
                     text: 'মডিউল ১০(২): হেল্পার্স ও কালেকশনস',
                     collapsed: true,
                     items: [
@@ -158,11 +150,91 @@ export default {
                     ]
                 },
                 {
+                    text: 'মডিউল ১০(৩): কুয়েরি বিল্ডার',
+                    collapsed: true,
+                    items: [
+                        { text: 'Episode 6: Query Builder Deep Dive', link: '/module-10/Episode%206-%20Deep%20dive%20in%20query%20builder.%20Insert,%20update,%20delete' },
+                        { text: 'Episode 6: Interview Topics', link: '/module-10/-Episod-6' },
+                        { text: 'Episode 7: Chunking and Lazy Loading', link: '/module-10/Episode%207%20Chunking%20and%20Lazy%20Loading' },
+                        { text: 'Episode 7: Chunking and Lazy Loading (Part 2)', link: '/module-10/Ep-7%20Chunking%20and%20Lazy%20Loading' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১০ ও ১১: অথেন্টিকেশন ও মিডলওয়্যার',
+                    collapsed: true,
+                    items: [
+                        { text: 'Validation in Laravel', link: '/laravel/validation' },
+                        { text: 'Authentication Mechanisms', link: '/laravel/authentication' },
+                        { text: 'Episode 1: PSR & Coding Conventions', link: '/module%2011/Episode%201%20%20Practices%20and%20recommendations%20PSR%20and%20Coding%20Conventions' },
+                        { text: 'Episode 1: Best Practices', link: '/module%2011/Episode%201Best%20practices%20and%20recommendations' },
+                        { text: 'Episode 2: Fortify, Sanctum, Passport', link: '/module%2011/Episode%202%20Fortify,%20Sanctum,%20Passport' },
+                        { text: 'Episode 3: Guards and User Providers', link: '/module%2011/Episode%203%20Guards%20and%20User%20providers' },
+                        { text: 'Episode 4: Social Auth', link: '/module%2011/Episode%204%20Social%20Auth' },
+                        { text: 'Episode 5: Error Handling - Logging', link: '/module%2011/Episode%205Error%20handling%20-%20Logging' },
+                        { text: 'Episode 6: Debugging Tools and Techniques', link: '/module%2011/Episode%206%20Debugging%20tools%20and%20techniques' },
+                        { text: 'Live Class: Understanding Auth Mechanisms', link: '/module%2011/Live%20Class%201-%20Understanding%20Auth%20Mechanisms' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১২: ইলোকুয়েন্ট ওআরএম',
+                    collapsed: true,
+                    items: [
+                        { text: 'Episode 1: Intro to Eloquent ORM', link: '/module%2011/Module%2012/Episode%201%20Intro%20to%20Eloquent%20ORM' },
+                        { text: 'Episode 2: Active Record vs Data Mapper', link: '/module%2011/Module%2012/Episode%202%20Eloquent%20ORM%20%20Active%20Record%20vs.%20Data%20Mapper%20Pattern' },
+                        { text: 'Episode 3: More about Eloquent', link: '/module%2011/Module%2012/Episode%203%20Eloquent%20ORM%20More%20about%20Eloquent%20' },
+                        { text: 'Episode 4: Eloquent vs Query Builder', link: '/module%2011/Module%2012/Episode%204%20Eloquent%20VS%20Query%20Builder' },
+                        { text: 'Episode 5: Eloquent Relationships', link: '/module%2011/Module%2012/Episode%205%20Eloquent%20Relationships' },
+                        { text: 'Episode 6: Route Model Binding', link: '/module%2011/Module%2012/Episode%206Eloquent%20ORM%20Route%20Model%20binding' },
+                        { text: 'Episode 7: Model Factories', link: '/module%2011/Module%2012/Episode%207%20Eloquent%20ORM%20Model%20Factories' },
+                    ]
+                },
+                {
                     text: 'মডিউল ১৩: নেমিং কনভেনশন ও ফ্রেমওয়ার্কস',
                     collapsed: true,
                     items: [
+                        { text: 'Episode 1: Laravel Architecture & Reflections', link: '/Module%2013/Ep-1%20Laraval%20Architecture%20concepts%20Reflections%20in%20PHP' },
+                        { text: 'Episode 2: Service Container in Laravel', link: '/Module%2013/Episode%202%20Service%20Container%20in%20Laravel' },
                         { text: 'Laravel Naming Conventions', link: '/laravel/naming-conventions' },
                         { text: 'Tailwind CSS & Alpine.js', link: '/laravel/tailwind-alpine' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৪: RESTful API',
+                    collapsed: true,
+                    items: [
+                        { text: 'Episode 1: RESTful API Development', link: '/module-14/ep-1%20Line%20class%20-%201%20Restful%20API%20development' },
+                        { text: 'Live Class 2: REST API Part 2', link: '/module-14/Live%20Class%202-Rest%20Api%20Part-2' },
+                        { text: 'Live Class 2: Caching', link: '/module-14/Module%2014(2)%20Live%20Class%202%20Caching' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৫: Laravel Console Command',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 1: Laravel Console Command', link: '/Module-15/Laravel_Consol_ecommand' },
+                        { text: 'Live Class 2: Livewire', link: '/Module-15/Live%20Class%202Livewire' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৬: লাইভ ক্লাস',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 2', link: '/Module%2016/Episode-%20%20Live%20Class%202' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৮: প্রসেস ও টাস্ক শিডিউলিং',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 1: Processes & Task Scheduling', link: '/Module%2018/Live%20Class%201%20%20Processes & Task Scheduling' },
+                    ]
+                },
+                {
+                    text: 'মডিউল ১৯',
+                    collapsed: true,
+                    items: [
+                        { text: 'Live Class 1: Web Developer Essentials', link: '/Module%2019/Live%20Class%20-%201' },
+                        { text: 'Live Class 2: Deployment', link: '/Module%2019/Live%20class%202%20Deployment' },
                     ]
                 },
                 {
@@ -173,6 +245,7 @@ export default {
                         { text: 'Database & SQL Interview QA', link: '/extra/database-interview' },
                     ]
                 }
+
             ],
 
             // CSS Sidebar
@@ -251,6 +324,7 @@ export default {
                         { text: 'Facebook Login Clone', link: '/css/project-facebook' },
                     ]
                 }
+
             ],
 
             // React Sidebar
@@ -303,3 +377,19 @@ export default {
         }
     }
 }
+
+for (const path of [
+    '/module-10/',
+    '/module 11/',
+    '/module 11/Module 12/',
+    '/Module 13/',
+    '/module-14/',
+    '/Module-15/',
+    '/Module 16/',
+    '/Module 18/',
+    '/Module 19/',
+]) {
+    config.themeConfig.sidebar[path] = config.themeConfig.sidebar['/laravel/']
+}
+
+export default config
